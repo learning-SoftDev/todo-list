@@ -1,7 +1,11 @@
 :root {
   font-family: 'Alata', sans-serif;
   font-size: 16px;
-
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Variables */
   --bgColor1: #15202b;
   --bgColor2: #192734;
   --bgColor3: #22303c;
@@ -11,12 +15,6 @@
   --accentDark: #1f8d4d;
 }
 
-html {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 body {
   font-family: 'Alata';
   margin: 0;

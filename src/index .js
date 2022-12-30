@@ -33,3 +33,37 @@ tile.forEach((item) =>
     e.target.closest('.tile').classList.add('selected');
   })
 );
+
+//Event listeners
+const eventListeners = () => {
+  //Cancel button
+  const projectCancelBtn = document.querySelector('.projectCancelBtn');
+  projectCancelBtn.addEventListener('click', hideProjectForm);
+  const listCancelBtn = document.querySelector('.listCancelBtn');
+  listCancelBtn.addEventListener('click', hideListForm);
+};
+
+//hide project form
+const hideProjectForm = () => {
+  const projectForm = document.querySelector('#projectForm');
+  const projectInput = document.querySelector('#projectInput');
+  //reset value
+  projectInput.value = '';
+  projectForm.classList.add('hidden');
+};
+
+//hide add-task-form
+const hideListForm = () => {
+  const listForm = document.querySelector('#listForm');
+  const listInput = document.querySelector('#listInput');
+  const listInputDetail = document.querySelector('#listInputDetail');
+  const dateInput = document.querySelector('#listInputDate');
+
+  //reset values
+  listInput.value = '';
+  listInputDetail.value = '';
+  dateInput.value = '';
+  listForm.classList.add('hidden');
+};
+
+eventListeners();

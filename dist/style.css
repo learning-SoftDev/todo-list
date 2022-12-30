@@ -121,3 +121,192 @@ body.light {
   border-radius: 50%;
   transition: transform 0.2s linear;
 }
+
+/* plus meaning target the node after it */
+.checkbox:checked + .label .ball {
+  transform: translate(37px);
+  background-color: var(--accentDark);
+  border: solid 4px var(--bgColor3);
+}
+.checkbox:checked + label {
+  background-color: var(--bgColor3);
+}
+
+/* css for content below logo */
+.content {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+/* css for .leftPanel */
+.leftPanel {
+  box-sizing: border-box;
+  background-color: var(--bgColor1);
+  display: flex;
+  flex-direction: column;
+  color: var(--textColor);
+  padding: 20px;
+  width: 350px;
+  user-select: none;
+}
+.leftPanel h2 {
+  margin-top: 0;
+  padding-bottom: 5px;
+  border-bottom: solid 2px var(--textColor);
+}
+.leftPanel .material-icons-round {
+  margin-right: 5px;
+  margin-left: 10px;
+}
+.leftPanel img {
+  width: 27px;
+  height: 27px;
+  margin-right: 5px;
+  margin-left: 10px;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+button,
+li,
+form,
+.tile {
+  font-family: 'Alata', sans-serif;
+  margin: 3px 0;
+  height: auto;
+  padding-top: 20px;
+  font-size: 1.125rem;
+  color: var(--textColor);
+  background: transparent;
+  padding: 5px;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 4px;
+  border: solid 2px transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.leftPanel .tile:hover,
+button:hover,
+form:hover {
+  background-color: var(--bgColor2);
+}
+
+.projectInfo {
+  display: flex;
+  flex: 1;
+}
+
+.selected {
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  border-left: solid 3px var(--accent) !important;
+  background-color: #2abd6770;
+}
+.selected:hover {
+  background-color: #1f8d4d7a !important;
+}
+
+/* css for editProject part */
+.editContainer {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  position: relative;
+}
+.editContainer.active .option {
+  opacity: 1 !important;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.option {
+  pointer-events: none;
+  display: flex;
+  opacity: 0;
+  flex-direction: column;
+  background: var(--textColor);
+  bottom: 30px;
+  right: 10px;
+  z-index: 2;
+  border-radius: 3px;
+  background-color: var(--bgColorPopUp);
+  padding: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transform: translateY(+10px);
+  transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+  position: absolute;
+}
+.option > button {
+  color: var(--textColor);
+  margin: 0;
+}
+
+.project #projectForm,
+.project #renameForm,
+#listForm,
+#editListForm {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  transition-delay: 1s;
+  max-height: 500px;
+  transition: max-height 0.8s ease-out, opacity 300ms ease-in-out;
+}
+
+.hidden {
+  top: 0;
+  left: 0;
+  pointer-events: none !important;
+  position: absolute !important;
+  max-height: 0 !important;
+
+  /* do nth but avoid opacity transition when position absolute */
+  transition: max-height 1s ease-out !important;
+  opacity: 0 !important;
+}
+
+.projectIcon {
+  margin-top: 3px;
+}
+
+.formInput {
+  display: flex;
+}
+.inputField {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  box-sizing: content-box;
+}
+input[type='text'],
+textarea,
+input[type='date'] {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Alata';
+  font-size: 1rem;
+  background-color: white;
+  border: solid 2px #273746;
+  border-radius: 3px;
+  padding: 5px;
+  resize: none;
+}
+.formButtons {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

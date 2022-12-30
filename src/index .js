@@ -21,3 +21,15 @@ hiddenMenu.addEventListener('click', () => {
   const leftPanel = document.querySelector('.leftPanel');
   leftPanel.classList.toggle('hidden');
 });
+
+//Sidebar click logic
+const tile = document.querySelectorAll('.tile');
+
+tile.forEach((item) =>
+  item.addEventListener('click', (e) => {
+    for (i of tile) {
+      i.classList.remove('selected');
+    }
+    e.target.closest('.tile').classList.add('selected');
+  })
+);

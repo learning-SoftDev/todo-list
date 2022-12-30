@@ -4,7 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
     <title>ToDoList</title>
   </head>
-  <body></body>
+  <body>
+    <header class="logoArea">
+      <div class="hiddenMenu">
+        <span class="material-icons-round">menu</span>
+      </div>
+      <div class="logoLeft">
+        <img src="./images/check_logo.png" alt="check logo" />
+        <div class="logoText"><span>ToDo</span>List</div>
+      </div>
+      <div class="theme">
+        <input type="checkbox" class="checkbox" id="checkbox" checked="true" />
+        <label for="checkbox" class="label">
+          <img class="sun" src="images/sun.png" />
+          <span class="material-icons-round moon">dark_mode</span>
+          <div class="ball"></div>
+        </label>
+      </div>
+    </header>
+  </body>
 </html>

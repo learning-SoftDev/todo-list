@@ -1,0 +1,81 @@
+:root {
+  font-family: 'Alata', sans-serif;
+  font-size: 16px;
+
+  --bgColor1: #15202b;
+  --bgColor2: #192734;
+  --bgColor3: #22303c;
+  --bgColorPopUp: #273746;
+  --textColor: #eaebec;
+  --accent: #2abd67;
+  --accentDark: #1f8d4d;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Alata';
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* css when light mode is turned on */
+body.light {
+  --bgColor2: #ececec;
+  --bgColor3: #f2f3f5;
+  --bgColor1: #fefcfe;
+  --bgColorPopUp: #f3f1f3;
+  --textColor: #374958;
+  --accentDark: #2abd67;
+}
+/* css for header area(logo) */
+.logoArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bgColor3);
+  font-size: 2.5rem;
+  padding: 10px 20px;
+  font-weight: 900;
+  border-bottom: solid 2px var(--accentDark);
+}
+.hiddenMenu {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  padding: 10px;
+  border-radius: 4px;
+}
+.hiddenMenu:active {
+  transform: scale(0.9);
+}
+.hiddenMenu .material-icons-round {
+  color: var(--textColor);
+  transform: scale(1.3);
+
+  pointer-events: none;
+}
+.hiddenMenu:hover {
+  background-color: rgba(128, 128, 128, 0.267);
+}
+.logoLeft {
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+}
+.logoLeft img {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding-right: 5px;
+}
+.logoLeft span {
+  color: var(--textColor);
+}

@@ -41,6 +41,10 @@ const eventListeners = () => {
   projectCancelBtn.addEventListener('click', hideProjectForm);
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
+
+  //Submit - add button
+  const submitProject = document.getElementById('projectForm');
+  submitProject.addEventListener('submit', processProjectInput);
 };
 
 //hide project form
@@ -64,6 +68,34 @@ const hideListForm = () => {
   listInputDetail.value = '';
   dateInput.value = '';
   listForm.classList.add('hidden');
+};
+
+//get project list of objects from locak storage or start with empty
+let defaultProjectList = [];
+let projectList = localStorage.getItem('myProjectList');
+projectList = JSON.parse(projectList || JSON.stringify(defaultProjectList));
+
+const processProjectInput = (e) => {
+  let projectName = document.getElementById('projectInput').value;
+  let dataProject = findNextDataset();
+  const newProject = CreateProject(dataProject, projectName);
+
+  projectList.push(newProject);
+  console.log('test');
+  saveToLocalStorage();
+
+  e.preventDefault();
+};
+
+//save projectList and last id data on local storage
+function saveToLocalStorage() {
+  localStorage.setItem('myProjectList', JSON.stringify(projectList));
+}
+
+//find next data-set
+const findNextDataset = () => {
+  const allprojects = document.querySelectorAll('[data-project]');
+  return allprojects.length;
 };
 
 eventListeners();

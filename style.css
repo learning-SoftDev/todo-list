@@ -79,3 +79,45 @@ body.light {
 .logoLeft span {
   color: var(--textColor);
 }
+.theme {
+  margin-right: 0px;
+  user-select: none;
+}
+.label {
+  background-color: var(--bgColor1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 50px;
+  height: 40px;
+  width: 80px;
+  box-sizing: border-box;
+  position: relative;
+  transform: scale(0.8);
+  transition: background-color 0.2s ease-in;
+  border: solid 3px var(--accentDark);
+  cursor: pointer;
+}
+.checkbox {
+  opacity: 0;
+  position: absolute;
+}
+.sun {
+  transform: scale(1.3);
+  width: 24.7px;
+}
+.moon {
+  color: rgb(86, 152, 163);
+  transform: scale(1.3);
+}
+.ball {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  left: 3px;
+  background-color: var(--accentDark);
+  border: solid 4px var(--bgColor1);
+  border-radius: 50%;
+  transition: transform 0.2s linear;
+}

@@ -308,3 +308,124 @@ input[type='date'] {
   justify-content: center;
   width: 100%;
 }
+
+.projectSubmitBtn,
+.projectCancelBtn,
+.rename-renameBtn,
+.rename-cancelBtn,
+.listSubmitBtn,
+.listCancelBtn,
+.editTaskSubmitBtn,
+.editTaskCancelBtn {
+  font-family: 'Alata';
+  width: 70px;
+  margin: 5px;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  font-weight: bold;
+}
+.projectSubmitBtn,
+.rename-renameBtn,
+.listSubmitBtn,
+.editTaskSubmitBtn {
+  background-color: var(--accentDark);
+}
+.projectCancelBtn,
+.rename-cancelBtn,
+.listCancelBtn,
+.editTaskCancelBtn {
+  background-color: rgb(190, 4, 4);
+}
+
+button:hover,
+input[type='button']:hover,
+input[type='submit']:hover {
+  opacity: 0.9;
+}
+
+/* css for drag and drop event */
+.dragging {
+  opacity: 0.5;
+}
+
+/* css for right panel */
+.rightPanel {
+  background-color: var(--bgColor2);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 50px;
+  flex: 1;
+  min-height: 90vh;
+  box-sizing: border-box;
+}
+.title {
+  background-color: var(--accentDark);
+  height: 60px;
+  padding: 20px;
+  font-size: 2.3rem;
+  color: #f7f5f5;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+ul {
+  padding: 0;
+  list-style-type: none;
+  color: var(--textColor);
+}
+
+.list-todo {
+  display: flex;
+  flex-direction: column;
+}
+li {
+  display: flex;
+  align-items: flex-start;
+  height: auto;
+  padding: 0;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  border: solid 1.5px var(--textColor);
+  transition: transform 100ms ease-in-out;
+}
+
+.checkmark {
+  padding-top: 3px;
+  display: block;
+}
+ul .material-icons-round {
+  transform: scale(0.8);
+  margin-right: 8px;
+  margin-top: 10px;
+}
+
+/* checkmark button */
+.unchecked {
+  width: 13px;
+  height: 13px;
+  border: solid 2px var(--textColor);
+  border-radius: 50%;
+  margin-right: 8px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+.checked {
+  background-image: url('./images/checkmark.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-color: white;
+  border-color: var(--accent);
+}
+.lineThrough {
+  text-decoration: line-through;
+}
+.fade {
+  opacity: 0.7;
+}
+.listHidden {
+  opacity: 0;
+  position: absolute;
+}

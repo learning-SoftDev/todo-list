@@ -76,82 +76,11 @@ const hideListForm = () => {
   listForm.classList.add('hidden');
 };
 
-// //-------------------------------------------------------------------------------------------------------
-// //Get project list of objects from local storage or start with empty
-// let projectList = JSON.parse(localStorage.getItem('myProjectList')) || [];
-
-// const processProjectInput = (e) => {
-//   let projectName = document.getElementById('projectInput').value;
-//   const newProject = new CreateProject(projectName);
-//   projectList.push(newProject);
-//   saveToLocalStorage();
-//   // addProjectDOM(projectName);
-//   hideProjectForm();
-//   e.preventDefault();
-// };
-
-// //Create project constructor
-// function CreateProject(projectName) {
-//   this.projectName = projectName;
-// }
-
-// //save projectList and last id data on local storage
-// function saveToLocalStorage() {
-//   localStorage.setItem('myProjectList', JSON.stringify(projectList));
-// }
-
-// //display the list of all projects in the left panel
-// const displayProject = (array) => {
-//   array.forEach((project) => {
-//     addProjectDOM(project.projectName);
-//   });
-// };
-
-// create a span icon of google material icons
-const createSpanIcon = (name) => {
-  const icon = document.createElement('span');
-  icon.classList.add('material-icons-round');
-  icon.textContent = name;
-  return icon;
-};
-
-// //create a project and add it to the list of projects in html
-// const addProjectDOM = (textInput) => {
-//   const project = document.querySelector('.project');
-//   const form = document.querySelector('#projectForm');
-
-//   const container = document.createElement('div');
-//   const menuIcon = createSpanIcon('menu');
-//   const projectInfo = document.createElement('div');
-//   const projectName = document.createElement('div');
-//   const editIcon = createSpanIcon('edit');
-//   const deleteIcon = createSpanIcon('delete');
-
-//   container.classList.add('tile');
-//   project.insertBefore(container, form);
-//   projectInfo.classList.add('projectInfo');
-//   projectName.classList.add('projectName');
-//   projectName.textContent = textInput;
-
-//   container.appendChild(menuIcon);
-//   container.appendChild(projectInfo);
-//   projectInfo.appendChild(projectName);
-//   container.appendChild(editIcon);
-//   container.appendChild(deleteIcon);
-
-//   deleteIcon.addEventListener('click', (e) => {
-//     projectList = projectList.filter((t) => t != newProject);
-//     saveToLocalStorage();
-//   });
-//   //tile change logic
-//   tileChange();
-// };
-
 eventListeners();
 
 //On load, get items from local storage then add the submit event handler to the form. Note to put displayProjects in every change to reflect changes in DOM
 window.addEventListener('load', () => {
-  projectList = JSON.parse(localStorage.getItem('myProjectList')) || [];
+  projectList = JSON.parse(localStorage.getItem('projectList')) || [];
   const newProjectForm = document.querySelector('#projectForm');
 
   newProjectForm.addEventListener('submit', (e) => {
@@ -180,14 +109,24 @@ function CreateProject(projectName) {
 
 //Save projectList on local storage
 function saveToLocalStorage() {
-  localStorage.setItem('myProjectList', JSON.stringify(projectList));
+  localStorage.setItem('projectList', JSON.stringify(projectList));
 }
 
-function displayProjects() {
-  projectList.forEach((proj) => {
-    const project = document.querySelector('.project');
-    const form = document.querySelector('#projectForm');
+// create a span icon of google material icons
+const createSpanIcon = (name) => {
+  const icon = document.createElement('span');
+  icon.classList.add('material-icons-round');
+  icon.textContent = name;
+  return icon;
+};
 
+function displayProjects() {
+  const todoList = document.querySelector('#projectCompleteList');
+  todoList.innerHTML = '';
+  projectList.forEach((proj) => {
+    const projectCompleteList = document.querySelector('#projectCompleteList');
+
+    //adding elements
     const container = document.createElement('div');
     const menuIcon = createSpanIcon('menu');
     const projectInfo = document.createElement('div');
@@ -195,17 +134,26 @@ function displayProjects() {
     const editIcon = createSpanIcon('edit');
     const deleteIcon = createSpanIcon('delete');
 
+    //adding classlist of elements above
     container.classList.add('tile');
-    project.insertBefore(container, form);
     projectInfo.classList.add('projectInfo');
     projectName.classList.add('projectName');
     projectName.textContent = proj.projectName;
 
+    //appending
     container.appendChild(menuIcon);
     container.appendChild(projectInfo);
     projectInfo.appendChild(projectName);
     container.appendChild(editIcon);
     container.appendChild(deleteIcon);
+    projectCompleteList.appendChild(container);
+
+    //delete icon logic
+    deleteIcon.addEventListener('click', (e) => {
+      projectList = projectList.filter((t) => t.projectName !== proj.projectName);
+      saveToLocalStorage();
+      displayProjects();
+    });
 
     //tile change logic
     tileChange();

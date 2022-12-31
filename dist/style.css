@@ -200,9 +200,22 @@ form:hover {
   background-color: var(--bgColor2);
 }
 
-.projectInfo {
+.projectName {
   display: flex;
   flex: 1;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  padding: 5px;
+  padding-left: 10px;
+  width: 150px;
+}
+
+.projectName:focus {
+  outline: 0;
 }
 
 .selected {

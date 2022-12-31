@@ -129,31 +129,32 @@ function displayProjects() {
     //adding elements
     const container = document.createElement('div');
     const menuIcon = createSpanIcon('menu');
-    const projectInfo = document.createElement('div');
-    const projectName = document.createElement('div');
+    const projectName = document.createElement('input');
+    projectName.setAttribute('readonly', '');
     const editIcon = createSpanIcon('edit');
     const deleteIcon = createSpanIcon('delete');
 
     //adding classlist of elements above
     container.classList.add('tile');
-    projectInfo.classList.add('projectInfo');
     projectName.classList.add('projectName');
-    projectName.textContent = proj.projectName;
+    projectName.value = proj.projectName;
 
     //appending
     container.appendChild(menuIcon);
-    container.appendChild(projectInfo);
-    projectInfo.appendChild(projectName);
+    container.appendChild(projectName);
     container.appendChild(editIcon);
     container.appendChild(deleteIcon);
     projectCompleteList.appendChild(container);
 
     //delete icon logic
-    deleteIcon.addEventListener('click', (e) => {
+    deleteIcon.addEventListener('click', () => {
       projectList = projectList.filter((t) => t.projectName !== proj.projectName);
       saveToLocalStorage();
       displayProjects();
     });
+
+    //edit icon logic
+    editIcon.addEventListener('click', (e) => {});
 
     //tile change logic
     tileChange();

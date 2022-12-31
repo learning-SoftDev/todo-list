@@ -131,6 +131,7 @@ function displayProjects() {
     const menuIcon = createSpanIcon('menu');
     const projectName = document.createElement('input');
     projectName.setAttribute('readonly', '');
+    projectName.setAttribute('spellcheck', false);
     const editIcon = createSpanIcon('edit');
     const deleteIcon = createSpanIcon('delete');
 
@@ -154,7 +155,17 @@ function displayProjects() {
     });
 
     //edit icon logic
-    editIcon.addEventListener('click', (e) => {});
+    editIcon.addEventListener('click', (e) => {
+      const projectInput = container.querySelector('.projectName');
+      projectInput.removeAttribute('readonly');
+      projectInput.focus();
+      projectInput.addEventListener('blur', (e) => {
+        projectInput.setAttribute('readonly', true);
+        proj.projectName = e.target.value;
+        saveToLocalStorage();
+        displayProjects();
+      });
+    });
 
     //tile change logic
     tileChange();

@@ -23,16 +23,20 @@ hiddenMenu.addEventListener('click', () => {
 });
 
 //Sidebar click logic
-const tile = document.querySelectorAll('.tile');
+const tileChange = () => {
+  const tile = document.querySelectorAll('.tile');
 
-tile.forEach((item) =>
-  item.addEventListener('click', (e) => {
-    for (i of tile) {
-      i.classList.remove('selected');
-    }
-    e.target.closest('.tile').classList.add('selected');
-  })
-);
+  tile.forEach((item) =>
+    item.addEventListener('click', (e) => {
+      for (i of tile) {
+        i.classList.remove('selected');
+      }
+      e.target.closest('.tile').classList.add('selected');
+    })
+  );
+};
+
+tileChange();
 
 //Event listeners
 const eventListeners = () => {
@@ -45,6 +49,8 @@ const eventListeners = () => {
   //Submit - add button
   const submitProject = document.querySelector('#projectForm');
   submitProject.addEventListener('submit', processProjectInput);
+
+  displayProject(projectList);
 };
 
 //Cancel button - hide project form
@@ -78,8 +84,8 @@ const processProjectInput = (e) => {
   let projectName = document.getElementById('projectInput').value;
   const newProject = new CreateProject(projectName);
   projectList.push(newProject);
-
   saveToLocalStorage();
+  addProject(projectName);
   hideProjectForm();
   e.preventDefault();
 };
@@ -93,5 +99,60 @@ function CreateProject(projectName) {
 function saveToLocalStorage() {
   localStorage.setItem('myProjectList', JSON.stringify(projectList));
 }
+
+//display the list of all projects in the left panel
+const displayProject = (array) => {
+  array.forEach((project) => {
+    addProjectDOM(project.projectName);
+  });
+};
+
+// create a span icon of google material icons
+const createSpanIcon = (name) => {
+  const icon = document.createElement('span');
+  icon.classList.add('material-icons-round');
+  icon.textContent = name;
+  return icon;
+};
+
+//create a project and add it to the list of projects in html
+const addProjectDOM = (textInput) => {
+  const project = document.querySelector('.project');
+  const form = document.querySelector('#projectForm');
+
+  const container = document.createElement('div');
+  container.classList.add('tile');
+  project.insertBefore(container, form);
+
+  //menu three lines icon
+  const menuIcon = createSpanIcon('menu');
+  menuIcon.setAttribute('data-drag', '');
+  container.appendChild(menuIcon);
+
+  //name and number status
+  const projectInfo = document.createElement('div');
+  projectInfo.classList.add('projectInfo');
+  container.appendChild(projectInfo);
+
+  const projectName = document.createElement('div');
+  projectName.classList.add('projectName');
+  projectName.textContent = textInput;
+
+  projectInfo.appendChild(projectName);
+
+  //three dots on the right section
+  const editdiv = document.createElement('div');
+  editdiv.classList.add('editContainer');
+  editdiv.setAttribute('data-dropdown', '');
+  container.appendChild(editdiv);
+
+  //call function to create a span icon
+  const editIcon = createSpanIcon('more_vert');
+  editIcon.setAttribute('data-dropdown-button', '');
+  editdiv.appendChild(editIcon);
+
+  //tile change logic
+  tileChange();
+};
 
 eventListeners();

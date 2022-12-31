@@ -46,11 +46,11 @@ const eventListeners = () => {
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
 
-  //Submit - add button
-  const submitProject = document.querySelector('#projectForm');
-  submitProject.addEventListener('submit', processProjectInput);
+  // //Submit - add button
+  // const submitProject = document.querySelector('#projectForm');
+  // submitProject.addEventListener('submit', processProjectInput);
 
-  displayProject(projectList);
+  // displayProject(projectList);
 };
 
 //Cancel button - hide project form
@@ -76,36 +76,36 @@ const hideListForm = () => {
   listForm.classList.add('hidden');
 };
 
-//-------------------------------------------------------------------------------------------------------
-//Get project list of objects from local storage or start with empty
-let projectList = JSON.parse(localStorage.getItem('myProjectList')) || [];
+// //-------------------------------------------------------------------------------------------------------
+// //Get project list of objects from local storage or start with empty
+// let projectList = JSON.parse(localStorage.getItem('myProjectList')) || [];
 
-const processProjectInput = (e) => {
-  let projectName = document.getElementById('projectInput').value;
-  const newProject = new CreateProject(projectName);
-  projectList.push(newProject);
-  saveToLocalStorage();
-  addProject(projectName);
-  hideProjectForm();
-  e.preventDefault();
-};
+// const processProjectInput = (e) => {
+//   let projectName = document.getElementById('projectInput').value;
+//   const newProject = new CreateProject(projectName);
+//   projectList.push(newProject);
+//   saveToLocalStorage();
+//   // addProjectDOM(projectName);
+//   hideProjectForm();
+//   e.preventDefault();
+// };
 
-//Create project constructor
-function CreateProject(projectName) {
-  this.projectName = projectName;
-}
+// //Create project constructor
+// function CreateProject(projectName) {
+//   this.projectName = projectName;
+// }
 
-//save projectList and last id data on local storage
-function saveToLocalStorage() {
-  localStorage.setItem('myProjectList', JSON.stringify(projectList));
-}
+// //save projectList and last id data on local storage
+// function saveToLocalStorage() {
+//   localStorage.setItem('myProjectList', JSON.stringify(projectList));
+// }
 
-//display the list of all projects in the left panel
-const displayProject = (array) => {
-  array.forEach((project) => {
-    addProjectDOM(project.projectName);
-  });
-};
+// //display the list of all projects in the left panel
+// const displayProject = (array) => {
+//   array.forEach((project) => {
+//     addProjectDOM(project.projectName);
+//   });
+// };
 
 // create a span icon of google material icons
 const createSpanIcon = (name) => {
@@ -115,44 +115,99 @@ const createSpanIcon = (name) => {
   return icon;
 };
 
-//create a project and add it to the list of projects in html
-const addProjectDOM = (textInput) => {
-  const project = document.querySelector('.project');
-  const form = document.querySelector('#projectForm');
+// //create a project and add it to the list of projects in html
+// const addProjectDOM = (textInput) => {
+//   const project = document.querySelector('.project');
+//   const form = document.querySelector('#projectForm');
 
-  const container = document.createElement('div');
-  container.classList.add('tile');
-  project.insertBefore(container, form);
+//   const container = document.createElement('div');
+//   const menuIcon = createSpanIcon('menu');
+//   const projectInfo = document.createElement('div');
+//   const projectName = document.createElement('div');
+//   const editIcon = createSpanIcon('edit');
+//   const deleteIcon = createSpanIcon('delete');
 
-  //menu three lines icon
-  const menuIcon = createSpanIcon('menu');
-  menuIcon.setAttribute('data-drag', '');
-  container.appendChild(menuIcon);
+//   container.classList.add('tile');
+//   project.insertBefore(container, form);
+//   projectInfo.classList.add('projectInfo');
+//   projectName.classList.add('projectName');
+//   projectName.textContent = textInput;
 
-  //name and number status
-  const projectInfo = document.createElement('div');
-  projectInfo.classList.add('projectInfo');
-  container.appendChild(projectInfo);
+//   container.appendChild(menuIcon);
+//   container.appendChild(projectInfo);
+//   projectInfo.appendChild(projectName);
+//   container.appendChild(editIcon);
+//   container.appendChild(deleteIcon);
 
-  const projectName = document.createElement('div');
-  projectName.classList.add('projectName');
-  projectName.textContent = textInput;
-
-  projectInfo.appendChild(projectName);
-
-  //three dots on the right section
-  const editdiv = document.createElement('div');
-  editdiv.classList.add('editContainer');
-  editdiv.setAttribute('data-dropdown', '');
-  container.appendChild(editdiv);
-
-  //call function to create a span icon
-  const editIcon = createSpanIcon('more_vert');
-  editIcon.setAttribute('data-dropdown-button', '');
-  editdiv.appendChild(editIcon);
-
-  //tile change logic
-  tileChange();
-};
+//   deleteIcon.addEventListener('click', (e) => {
+//     projectList = projectList.filter((t) => t != newProject);
+//     saveToLocalStorage();
+//   });
+//   //tile change logic
+//   tileChange();
+// };
 
 eventListeners();
+
+//On load, get items from local storage then add the submit event handler to the form. Note to put displayProjects in every change to reflect changes in DOM
+window.addEventListener('load', () => {
+  projectList = JSON.parse(localStorage.getItem('myProjectList')) || [];
+  const newProjectForm = document.querySelector('#projectForm');
+
+  newProjectForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Add the new project into the project list then save to local storage
+    let projectName = document.getElementById('projectInput').value;
+    const newProject = new CreateProject(projectName);
+    projectList.push(newProject);
+    saveToLocalStorage();
+
+    // Reset the form
+    e.target.reset();
+
+    // Hide the new project pop up then refresh/reload the project list
+    hideProjectForm();
+    displayProjects();
+  });
+  displayProjects();
+});
+
+//Create project constructor
+function CreateProject(projectName) {
+  this.projectName = projectName;
+}
+
+//Save projectList on local storage
+function saveToLocalStorage() {
+  localStorage.setItem('myProjectList', JSON.stringify(projectList));
+}
+
+function displayProjects() {
+  projectList.forEach((proj) => {
+    const project = document.querySelector('.project');
+    const form = document.querySelector('#projectForm');
+
+    const container = document.createElement('div');
+    const menuIcon = createSpanIcon('menu');
+    const projectInfo = document.createElement('div');
+    const projectName = document.createElement('div');
+    const editIcon = createSpanIcon('edit');
+    const deleteIcon = createSpanIcon('delete');
+
+    container.classList.add('tile');
+    project.insertBefore(container, form);
+    projectInfo.classList.add('projectInfo');
+    projectName.classList.add('projectName');
+    projectName.textContent = proj.projectName;
+
+    container.appendChild(menuIcon);
+    container.appendChild(projectInfo);
+    projectInfo.appendChild(projectName);
+    container.appendChild(editIcon);
+    container.appendChild(deleteIcon);
+
+    //tile change logic
+    tileChange();
+  });
+}

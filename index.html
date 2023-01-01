@@ -31,19 +31,19 @@
       <div class="leftPanel">
         <div class="home">
           <h2>Home</h2>
-          <div class="tile selected" id="allTasks">
+          <div class="tile homeTiles selected" id="allTasks">
             <img src="images/inbox.png" alt="inbox" />
             <div data-name>All Tasks</div>
           </div>
-          <div class="tile" id="today">
+          <div class="tile homeTiles" id="today">
             <img src="images/today1.png" alt="today" />
             <div data-name>Today</div>
           </div>
-          <div class="tile" id="thisWeek">
+          <div class="tile homeTiles" id="thisWeek">
             <img src="images/week2.png" />
             <div data-name>Next 7 Days</div>
           </div>
-          <div class="tile" id="important">
+          <div class="tile homeTiles" id="important">
             <img src="images/star.png" alt="star" />
             <div data-name>Important</div>
           </div>
@@ -124,7 +124,7 @@
               </div>
             </div>
           </form>
-          <button id="addList">
+          <button id="addList" class="hidden">
             <span class="material-icons-round">add_circle_outlined</span>Add Task
           </button>
         </div>

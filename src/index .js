@@ -26,6 +26,7 @@ hiddenMenu.addEventListener('click', () => {
 const tileChange = () => {
   const tile = document.querySelectorAll('.tile');
   const addList = document.querySelector('#addList');
+  const title = document.querySelector('.title');
 
   tile.forEach((item) =>
     item.addEventListener('click', (e) => {
@@ -39,14 +40,14 @@ const tileChange = () => {
       let addListHide = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
       if (addListHide) {
         addList.classList.add('hidden');
+        title.innerHTML = e.target.closest('.tile').textContent;
       } else {
         addList.classList.remove('hidden');
+        title.innerHTML = e.target.closest('.tile').querySelector('input').value;
       }
     })
   );
 };
-
-tileChange();
 
 //Event listeners
 const eventListeners = () => {

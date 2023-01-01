@@ -25,13 +25,23 @@ hiddenMenu.addEventListener('click', () => {
 //Sidebar click logic
 const tileChange = () => {
   const tile = document.querySelectorAll('.tile');
+  const addList = document.querySelector('#addList');
 
   tile.forEach((item) =>
     item.addEventListener('click', (e) => {
       for (i of tile) {
         i.classList.remove('selected');
       }
+      //add selected class
       e.target.closest('.tile').classList.add('selected');
+
+      //add task visibility logic
+      let addListHide = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
+      if (addListHide) {
+        addList.classList.add('hidden');
+      } else {
+        addList.classList.remove('hidden');
+      }
     })
   );
 };
@@ -45,12 +55,6 @@ const eventListeners = () => {
   projectCancelBtn.addEventListener('click', hideProjectForm);
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
-
-  // //Submit - add button
-  // const submitProject = document.querySelector('#projectForm');
-  // submitProject.addEventListener('submit', processProjectInput);
-
-  // displayProject(projectList);
 };
 
 //Cancel button - hide project form
@@ -108,9 +112,9 @@ function CreateProject(projectName) {
 }
 
 //Save projectList on local storage
-function saveToLocalStorage() {
+const saveToLocalStorage = () => {
   localStorage.setItem('projectList', JSON.stringify(projectList));
-}
+};
 
 // create a span icon of google material icons
 const createSpanIcon = (name) => {
@@ -120,7 +124,7 @@ const createSpanIcon = (name) => {
   return icon;
 };
 
-function displayProjects() {
+const displayProjects = () => {
   const todoList = document.querySelector('#projectCompleteList');
   todoList.innerHTML = '';
   projectList.forEach((proj) => {
@@ -170,4 +174,4 @@ function displayProjects() {
     //tile change logic
     tileChange();
   });
-}
+};

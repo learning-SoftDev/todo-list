@@ -188,7 +188,7 @@ form,
   padding: 5px;
   display: flex;
   align-items: flex-start;
-  border-radius: 4px;
+  border-radius: 10px;
   border: solid 2px transparent;
   box-sizing: border-box;
   cursor: pointer;
@@ -265,8 +265,8 @@ form:hover {
 
 .project #projectForm,
 .project #renameForm,
-#listForm,
-#editListForm {
+#taskForm,
+#editTaskForm {
   display: flex;
   flex: 1;
   align-items: flex-start;
@@ -396,11 +396,11 @@ ul {
 }
 li {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   height: auto;
-  padding: 0;
+  padding: 6px;
   padding-left: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   border: solid 1.5px var(--textColor);
   transition: transform 100ms ease-in-out;
 }
@@ -409,11 +409,11 @@ li {
   padding-top: 3px;
   display: block;
 }
-ul .material-icons-round {
+/* ul .material-icons-round {
   transform: scale(0.8);
   margin-right: 8px;
   margin-top: 10px;
-}
+} */
 
 /* checkmark button */
 .unchecked {
@@ -421,8 +421,7 @@ ul .material-icons-round {
   height: 13px;
   border: solid 2px var(--textColor);
   border-radius: 50%;
-  margin-right: 8px;
-  margin-top: 10px;
+  margin-right: 12px;
   flex-shrink: 0;
 }
 .checked {
@@ -454,12 +453,11 @@ ul .material-icons-round {
 }
 
 /* edit form css */
-#editListForm {
+#editTaskForm {
   background-color: transparent;
 }
 .list-details {
   flex: 1;
-  margin-top: 5px;
 }
 .taskTitle {
   min-height: 25px;
@@ -473,9 +471,8 @@ ul .material-icons-round {
 
 .list-right {
   display: flex;
-  padding: 5px;
-  position: relative;
 }
+
 .list-right .material-icons-round {
   padding: 1px;
   margin: 2px;
@@ -488,9 +485,9 @@ ul .material-icons-round {
 .date {
   font-size: 0.875rem;
   padding: 3px 6px;
-  margin: 6px 5px;
   border: solid 1.5px var(--textColor);
   border-radius: 10px;
+  text-align: center;
 }
 .list-details span {
   display: inline-block;
@@ -554,4 +551,56 @@ footer img {
 footer img:hover {
   background-color: var(--accent);
   cursor: pointer;
+}
+
+.disabled {
+  background-color: gray;
+  cursor: initial;
+}
+/* media queries */
+@media (max-width: 930px) {
+  :root {
+    font-size: 16px;
+  }
+  .content {
+    flex-direction: column;
+  }
+  .leftPanel {
+    z-index: 3;
+    overflow: auto;
+    width: auto;
+  }
+  footer {
+    line-height: 35px;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    font-size: 13px;
+  }
+  .rightPanel {
+    padding: 14px;
+  }
+  .title {
+    padding: 8px;
+    text-align: center;
+    margin: 0px;
+    height: auto;
+  }
+  .content .material-icons-round {
+    transform: scale(0.85);
+  }
+  .list-right {
+    padding: 0px;
+    margin-top: 3px;
+  }
+  .leftPanel img,
+  footer img {
+    width: 20px;
+    height: 20px;
+  }
+  footer {
+    line-height: 35px;
+  }
 }

@@ -101,6 +101,25 @@
               </div>
             </div>
           </form>
+          <form id="taskFormEdit" class="hidden" autocomplete="off">
+            <div class="inputField">
+              <label>Title:</label>
+              <input type="text" id="listInput" placeholder="Test" />
+              <label>Details(optional):</label>
+              <textarea
+                type="text"
+                id="listInputDetail"
+                placeholder="eg: I'm just gonna procrastinate, aren't I?"
+                wrap="hard"></textarea>
+              <label>Date(optional):</label>
+              <input type="date" id="listInputDate" />
+              <div class="taskValidation validation hidden">Duplicate title not allowed.</div>
+              <div class="formButtons">
+                <input type="submit" class="listSubmitBtn disabled" value="Add" disabled="true" />
+                <input type="button" class="listCancelBtn" id="editCancelButton" value="Cancel" />
+              </div>
+            </div>
+          </form>
           <button id="addList" class="hidden">
             <span class="material-icons-round">add_circle_outlined</span>Add Task
           </button>

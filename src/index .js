@@ -54,8 +54,12 @@ const eventListeners = () => {
   //Cancel button
   const projectCancelBtn = document.querySelector('.projectCancelBtn');
   projectCancelBtn.addEventListener('click', hideProjectForm);
+
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
+
+  const editCancelBtn = document.querySelector('#editCancelButton');
+  editCancelBtn.addEventListener('click', hideEditForm);
 };
 
 //Cancel button - hide project form
@@ -81,6 +85,18 @@ const hideListForm = () => {
   dateInput.value = '';
   taskForm.classList.add('hidden');
   taskValidation.classList.add('hidden');
+};
+
+//Cancel button - edit form
+const hideEditForm = () => {
+  const taskValidation = document.querySelector('.taskValidation');
+  const taskFormEdit = document.getElementById('taskFormEdit');
+  const listToDo = document.querySelector('.list-todo');
+  listToDo.appendChild(taskFormEdit);
+
+  taskFormEdit.classList.add('hidden');
+  taskValidation.classList.add('hidden');
+  refreshDisplayTasks();
 };
 
 eventListeners();
@@ -318,17 +334,24 @@ const refreshDisplayTasks = () => {
       refreshDisplayTasks();
     });
 
-    // //edit icon logic
-    // editIcon.addEventListener('click', (e) => {
-    //   const projectInput = container.querySelector('.projectName');
-    //   projectInput.removeAttribute('readonly');
-    //   projectInput.focus();
-    //   projectInput.addEventListener('blur', (e) => {
-    //     projectInput.setAttribute('readonly', true);
-    //     proj.projectName = e.target.value;
-    //     saveToLocalStorage();
-    //     refreshDisplayProjects();
-    //   });
-    // });
+    //edit icon logic
+    editIcon.addEventListener('click', () => {
+      // Create container element and hide the elements inside then append the edit form to the target task
+      const containerEdit = document.createElement('div');
+      containerEdit.classList.add('containerEdit');
+      li.querySelector('.unchecked').classList.add('hidden');
+      li.querySelector('.list-details').classList.add('hidden');
+      li.querySelector('.list-right').classList.add('hidden');
+      li.insertBefore(containerEdit, li.querySelector('.unchecked'));
+      containerEdit.appendChild(document.getElementById('taskFormEdit'));
+
+      const taskFormEdit = document.getElementById('taskFormEdit');
+      taskFormEdit.classList.remove('hidden');
+
+      //setting initial value of edit form based from the task current details
+      document.querySelector('#taskFormEdit > .inputField > #listInput').value = task.taskName;
+      document.querySelector('#taskFormEdit > .inputField > #listInputDetail').value = task.details;
+      document.querySelector('#taskFormEdit > .inputField > #listInputDate').value = task.dueDate;
+    });
   });
 };

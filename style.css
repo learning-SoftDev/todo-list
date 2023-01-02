@@ -609,3 +609,8 @@ footer img:hover {
   color: red;
   text-align: center;
 }
+
+.containerEdit {
+  width: 100%;
+  position: relative;
+}

@@ -190,7 +190,7 @@ window.addEventListener('load', () => {
   newtaskForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Add the new task into the task list then save to local storage
+    // Validation if duplicate task names exist
     const taskName = document.getElementById('listInput').value;
     const taskValidation = document.querySelector('.taskValidation');
     if (taskList.filter((t) => t.taskName === taskName).length > 0) {
@@ -198,23 +198,23 @@ window.addEventListener('load', () => {
       return;
     }
 
-    console.log('Test');
-    // let details = document.getElementById('listInputDetail').value;
-    // details === '' ? (details = 'No details') : details;
-    // let dueDate = document.getElementById('listInputDate').value;
-    // dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
-    // const projectName = document.querySelector('.selected input').value;
-    // const newtask = new CreateTask(taskName, projectName, details, dueDate);
-    // taskList.push(newtask);
-    // saveToLocalStorage();
+    // Add the new task into the task list then save to local storage
+    let details = document.getElementById('listInputDetail').value;
+    details === '' ? (details = 'No details') : details;
+    let dueDate = document.getElementById('listInputDate').value;
+    dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
+    const projectName = document.querySelector('.selected input').value;
+    const newtask = new CreateTask(taskName, projectName, details, dueDate);
+    taskList.push(newtask);
+    saveToLocalStorage();
 
-    // // Reset the form
-    // e.target.reset();
+    // Reset the form
+    e.target.reset();
 
-    // // // Hide the new task pop up then refresh/reload the task list
-    // hideListForm();
+    // // Hide the new task pop up then refresh/reload the task list
+    hideListForm();
 
-    // refreshDisplayTasks();
+    refreshDisplayTasks();
   });
   refreshDisplayTasks();
 });
@@ -254,6 +254,7 @@ const refreshDisplayTasks = () => {
     const taskDetails = document.createElement('div');
     const dateDiv = document.createElement('div');
     const listRight = document.createElement('div');
+    const starContainer = document.createElement('div');
     const starOutline = createSpanIcon('star_outline');
     const star = createSpanIcon('star');
     const editIcon = createSpanIcon('edit');
@@ -266,6 +267,7 @@ const refreshDisplayTasks = () => {
     taskDetails.classList.add('taskDetails');
     dateDiv.classList.add('date');
     listRight.classList.add('list-right');
+    starContainer.classList.add('.starContainer');
     starOutline.classList.add('star-outline');
     star.classList.add('important');
     task.important ? starOutline.classList.add('listHidden') : star.classList.add('listHidden');
@@ -289,14 +291,29 @@ const refreshDisplayTasks = () => {
     listDetails.appendChild(taskDetails);
     li.appendChild(listRight);
     listRight.appendChild(dateDiv);
-    listRight.appendChild(starOutline);
-    listRight.appendChild(star);
+    listRight.appendChild(starContainer);
+    starContainer.appendChild(starOutline);
+    starContainer.appendChild(star);
     listRight.appendChild(editIcon);
     listRight.appendChild(deleteIcon);
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
       taskList = taskList.filter((t) => t.taskName !== task.taskName);
+      saveToLocalStorage();
+      refreshDisplayTasks();
+    });
+
+    //check icon logic
+    unchecked.addEventListener('click', () => {
+      task.completed === true ? (task.completed = false) : (task.completed = true);
+      saveToLocalStorage();
+      refreshDisplayTasks();
+    });
+
+    //star icon logic
+    starContainer.addEventListener('click', () => {
+      task.important === true ? (task.important = false) : (task.important = true);
       saveToLocalStorage();
       refreshDisplayTasks();
     });

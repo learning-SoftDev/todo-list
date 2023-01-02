@@ -604,3 +604,8 @@ footer img:hover {
     line-height: 35px;
   }
 }
+
+.validation {
+  color: red;
+  text-align: center;
+}

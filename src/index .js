@@ -73,12 +73,14 @@ const hideListForm = () => {
   const listInput = document.querySelector('#listInput');
   const listInputDetail = document.querySelector('#listInputDetail');
   const dateInput = document.querySelector('#listInputDate');
+  const taskValidation = document.querySelector('.taskValidation');
 
   //reset values
   listInput.value = '';
   listInputDetail.value = '';
   dateInput.value = '';
   taskForm.classList.add('hidden');
+  taskValidation.classList.add('hidden');
 };
 
 eventListeners();
@@ -190,22 +192,29 @@ window.addEventListener('load', () => {
 
     // Add the new task into the task list then save to local storage
     const taskName = document.getElementById('listInput').value;
-    let details = document.getElementById('listInputDetail').value;
-    details === '' ? (details = 'No details') : details;
-    let dueDate = document.getElementById('listInputDate').value;
-    dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
-    const projectName = document.querySelector('.selected input').value;
-    const newtask = new CreateTask(taskName, projectName, details, dueDate);
-    taskList.push(newtask);
-    saveToLocalStorage();
+    const taskValidation = document.querySelector('.taskValidation');
+    if (taskList.filter((t) => t.taskName === taskName).length > 0) {
+      taskValidation.classList.remove('hidden');
+      return;
+    }
 
-    // Reset the form
-    e.target.reset();
+    console.log('Test');
+    // let details = document.getElementById('listInputDetail').value;
+    // details === '' ? (details = 'No details') : details;
+    // let dueDate = document.getElementById('listInputDate').value;
+    // dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
+    // const projectName = document.querySelector('.selected input').value;
+    // const newtask = new CreateTask(taskName, projectName, details, dueDate);
+    // taskList.push(newtask);
+    // saveToLocalStorage();
 
-    // // Hide the new task pop up then refresh/reload the task list
-    hideListForm();
+    // // Reset the form
+    // e.target.reset();
 
-    refreshDisplayTasks();
+    // // // Hide the new task pop up then refresh/reload the task list
+    // hideListForm();
+
+    // refreshDisplayTasks();
   });
   refreshDisplayTasks();
 });
@@ -285,9 +294,24 @@ const refreshDisplayTasks = () => {
     listRight.appendChild(editIcon);
     listRight.appendChild(deleteIcon);
 
-    // const editContainer = document.createElement('div');
-    // editContainer.dataset.dropdown = '';
-    // editContainer.classList.add('editContainer');
-    // listRight.appendChild(editContainer);
+    //delete icon logic
+    deleteIcon.addEventListener('click', () => {
+      taskList = taskList.filter((t) => t.taskName !== task.taskName);
+      saveToLocalStorage();
+      refreshDisplayTasks();
+    });
+
+    // //edit icon logic
+    // editIcon.addEventListener('click', (e) => {
+    //   const projectInput = container.querySelector('.projectName');
+    //   projectInput.removeAttribute('readonly');
+    //   projectInput.focus();
+    //   projectInput.addEventListener('blur', (e) => {
+    //     projectInput.setAttribute('readonly', true);
+    //     proj.projectName = e.target.value;
+    //     saveToLocalStorage();
+    //     refreshDisplayProjects();
+    //   });
+    // });
   });
 };

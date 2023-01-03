@@ -86,13 +86,14 @@ const hideListForm = () => {
   const taskValidation = document.querySelector('.taskValidation');
 
   //reset values
+
   listInput.value = '';
   listInputDetail.value = '';
   dateInput.value = '';
+
   taskForm.classList.add('hidden');
   taskValidation.classList.add('hidden');
-  const listToDo = document.querySelector('.list-todo');
-  listToDo.appendChild(taskForm);
+  document.querySelector('.list-todo').appendChild(taskForm);
   refreshDisplayTasks();
 };
 
@@ -193,7 +194,6 @@ const refreshDisplayProjects = () => {
   });
 };
 
-// --------------------------------------------------------------------------------------------------------------------------------
 // Creating tasks
 //On load, get items from local storage then add the submit event handler to the form. Note to put refreshDisplayProjects in every change to reflect changes in DOM
 window.addEventListener('load', () => {
@@ -203,26 +203,29 @@ window.addEventListener('load', () => {
   newtaskForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Validation if duplicate task names exist
     const taskName = document.getElementById('listInput').value;
     const taskValidation = document.querySelector('.taskValidation');
-    if (taskList.filter((t) => t.taskName === taskName).length > 0) {
+
+    // Validation if duplicate task names exist. Compare current local storage task names to listInput element value
+    if (taskName === editTitleCurrrent) {
+    } else if (
+      JSON.parse(localStorage.getItem('taskList')).filter((t) => t.taskName === taskName).length > 0
+    ) {
       taskValidation.classList.remove('hidden');
       return;
     }
 
+    // If not edit mode, then proceed with pushing the new task into the list
     if (!editMode) {
+      // Push details of new task into the taskList
       let details = document.getElementById('listInputDetail').value;
       details === '' ? (details = 'No details') : details;
       let dueDate = document.getElementById('listInputDate').value;
       dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
       const projectName = document.querySelector('.selected input').value;
-      // const projectName = 'hakdog';
       const newtask = new CreateTask(taskName, projectName, details, dueDate);
       taskList.push(newtask);
     }
-
-    console.log('testt');
     // Add the new task into the task list then save to local storage
     saveToLocalStorage();
 
@@ -265,6 +268,7 @@ function CreateTask(taskName, projectName, details, dueDate = 'No Due Date') {
 
 const refreshDisplayTasks = () => {
   // prevent from rearrangement of add and form itself
+  taskList = JSON.parse(localStorage.getItem('taskList')) || [];
   document
     .querySelector('.list-todo')
     .insertBefore(document.querySelector('#taskForm'), document.querySelector('#addList'));
@@ -360,15 +364,30 @@ const refreshDisplayTasks = () => {
       taskForm.classList.remove('hidden');
 
       //setting initial value of edit form based from the task current details
-      document.querySelector('#listInput').value = task.taskName;
-      document.querySelector('#listInputDetail').value = task.details;
-      document.querySelector('#listInputDate').value = task.dueDate;
+      let listInput = document.querySelector('#listInput');
+      let listInputDetail = document.querySelector('#listInputDetail');
+      let listInputDate = document.querySelector('#listInputDate');
+      listInput.value = task.taskName;
+      listInputDetail.value = task.details;
+      listInputDate.value = task.dueDate;
 
       //Show the confirmation edit button then hide the add button for new tasks since this is editing
       const editConfirm = document.querySelector('#editConfirm');
       editConfirm.classList.remove('hidden');
       document.querySelector('.listSubmitBtn').classList.add('hidden');
+
+      //When a field changed in the task form, then update the values of the variable taskList (without updating the local storage yet)
+      const parentInput = document.querySelector('#taskForm > .inputField');
+      for (const child of parentInput.children) {
+        child.addEventListener('change', () => {
+          task.taskName = listInput.value;
+          task.details = listInputDetail.value;
+          task.dueDate = listInputDate.value || 'No Due Date';
+        });
+      }
+      editTitleCurrrent = task.taskName;
     });
   });
   editMode = false;
+  editTitleCurrrent = '';
 };

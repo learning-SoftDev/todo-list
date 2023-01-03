@@ -6,7 +6,13 @@ addProject.addEventListener('click', () => projectForm.classList.remove('hidden'
 //Adding of task
 const addList = document.querySelector('#addList');
 const taskForm = document.querySelector('#taskForm');
-addList.addEventListener('click', () => taskForm.classList.remove('hidden'));
+const submitBtn = document.querySelector('.listSubmitBtn');
+const editConfirm = document.querySelector('#editConfirm');
+addList.addEventListener('click', () => {
+  taskForm.classList.remove('hidden');
+  submitBtn.classList.remove('hidden');
+  editConfirm.classList.add('hidden');
+});
 
 //Dark and Light Mode
 const checkbox = document.querySelector('#checkbox');
@@ -58,8 +64,8 @@ const eventListeners = () => {
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
 
-  const editCancelBtn = document.querySelector('#editCancelButton');
-  editCancelBtn.addEventListener('click', hideEditForm);
+  // const editCancelBtn = document.querySelector('#editCancelButton');
+  // editCancelBtn.addEventListener('click', hideEditForm);
 };
 
 //Cancel button - hide project form
@@ -85,17 +91,8 @@ const hideListForm = () => {
   dateInput.value = '';
   taskForm.classList.add('hidden');
   taskValidation.classList.add('hidden');
-};
-
-//Cancel button - edit form
-const hideEditForm = () => {
-  const taskValidation = document.querySelector('.taskValidation');
-  const taskFormEdit = document.getElementById('taskFormEdit');
   const listToDo = document.querySelector('.list-todo');
-  listToDo.appendChild(taskFormEdit);
-
-  taskFormEdit.classList.add('hidden');
-  taskValidation.classList.add('hidden');
+  listToDo.appendChild(taskForm);
   refreshDisplayTasks();
 };
 
@@ -214,14 +211,19 @@ window.addEventListener('load', () => {
       return;
     }
 
+    if (!editMode) {
+      let details = document.getElementById('listInputDetail').value;
+      details === '' ? (details = 'No details') : details;
+      let dueDate = document.getElementById('listInputDate').value;
+      dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
+      const projectName = document.querySelector('.selected input').value;
+      // const projectName = 'hakdog';
+      const newtask = new CreateTask(taskName, projectName, details, dueDate);
+      taskList.push(newtask);
+    }
+
+    console.log('testt');
     // Add the new task into the task list then save to local storage
-    let details = document.getElementById('listInputDetail').value;
-    details === '' ? (details = 'No details') : details;
-    let dueDate = document.getElementById('listInputDate').value;
-    dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
-    const projectName = document.querySelector('.selected input').value;
-    const newtask = new CreateTask(taskName, projectName, details, dueDate);
-    taskList.push(newtask);
     saveToLocalStorage();
 
     // Reset the form
@@ -235,18 +237,21 @@ window.addEventListener('load', () => {
   refreshDisplayTasks();
 });
 
+const editButton = () => {};
+
 //Validation of add button if task name field is empty
-const taskName = document.getElementById('listInput');
-taskName.addEventListener('input', (e) => {
-  const submitButton = document.querySelector('.listSubmitBtn');
-  if (e.target.value !== '') {
-    submitButton.disabled = false;
-    submitButton.classList.remove('disabled');
-  } else {
-    submitButton.classList.add('disabled');
-    submitButton.disabled = true;
-  }
-});
+const validationSubmit = (taskName, submitButton) => {
+  taskName.addEventListener('input', (e) => {
+    if (e.target.value !== '') {
+      submitButton.disabled = false;
+      submitButton.classList.remove('disabled');
+    } else {
+      submitButton.classList.add('disabled');
+      submitButton.disabled = true;
+    }
+  });
+};
+validationSubmit(document.getElementById('listInput'), document.querySelector('.listSubmitBtn'));
 
 //Create task constructor
 function CreateTask(taskName, projectName, details, dueDate = 'No Due Date') {
@@ -259,6 +264,10 @@ function CreateTask(taskName, projectName, details, dueDate = 'No Due Date') {
 }
 
 const refreshDisplayTasks = () => {
+  // prevent from rearrangement of add and form itself
+  document
+    .querySelector('.list-todo')
+    .insertBefore(document.querySelector('#taskForm'), document.querySelector('#addList'));
   const todoList = document.querySelector('#taskCompleteList > ul');
   todoList.innerHTML = '';
   taskList.forEach((task) => {
@@ -337,21 +346,29 @@ const refreshDisplayTasks = () => {
     //edit icon logic
     editIcon.addEventListener('click', () => {
       // Create container element and hide the elements inside then append the edit form to the target task
+      editMode = true;
+
       const containerEdit = document.createElement('div');
       containerEdit.classList.add('containerEdit');
       li.querySelector('.unchecked').classList.add('hidden');
       li.querySelector('.list-details').classList.add('hidden');
       li.querySelector('.list-right').classList.add('hidden');
       li.insertBefore(containerEdit, li.querySelector('.unchecked'));
-      containerEdit.appendChild(document.getElementById('taskFormEdit'));
+      containerEdit.appendChild(document.getElementById('taskForm'));
 
-      const taskFormEdit = document.getElementById('taskFormEdit');
-      taskFormEdit.classList.remove('hidden');
+      const taskForm = document.getElementById('taskForm');
+      taskForm.classList.remove('hidden');
 
       //setting initial value of edit form based from the task current details
-      document.querySelector('#taskFormEdit > .inputField > #listInput').value = task.taskName;
-      document.querySelector('#taskFormEdit > .inputField > #listInputDetail').value = task.details;
-      document.querySelector('#taskFormEdit > .inputField > #listInputDate').value = task.dueDate;
+      document.querySelector('#listInput').value = task.taskName;
+      document.querySelector('#listInputDetail').value = task.details;
+      document.querySelector('#listInputDate').value = task.dueDate;
+
+      //Show the confirmation edit button then hide the add button for new tasks since this is editing
+      const editConfirm = document.querySelector('#editConfirm');
+      editConfirm.classList.remove('hidden');
+      document.querySelector('.listSubmitBtn').classList.add('hidden');
     });
   });
+  editMode = false;
 };

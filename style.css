@@ -339,6 +339,7 @@ input[type='date'] {
   cursor: pointer;
   padding: 5px;
   font-weight: bold;
+  text-align: center;
 }
 .projectSubmitBtn,
 .rename-renameBtn,
@@ -488,6 +489,7 @@ li {
   border: solid 1.5px var(--textColor);
   border-radius: 10px;
   text-align: center;
+  width: 95px;
 }
 .list-details span {
   display: inline-block;
@@ -612,5 +614,4 @@ footer img:hover {
 
 .containerEdit {
   width: 100%;
-  position: relative;
 }

@@ -153,10 +153,7 @@ body.light {
   padding-bottom: 5px;
   border-bottom: solid 2px var(--textColor);
 }
-.leftPanel .material-icons-round {
-  margin-right: 5px;
-  margin-left: 10px;
-}
+
 .leftPanel img {
   width: 27px;
   height: 27px;
@@ -187,7 +184,7 @@ form,
   background: transparent;
   padding: 5px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 10px;
   border: solid 2px transparent;
   box-sizing: border-box;
@@ -410,11 +407,6 @@ li {
   padding-top: 3px;
   display: block;
 }
-/* ul .material-icons-round {
-  transform: scale(0.8);
-  margin-right: 8px;
-  margin-top: 10px;
-} */
 
 /* checkmark button */
 .unchecked {
@@ -475,22 +467,24 @@ li {
   display: flex;
 }
 
-.list-right .material-icons-round {
-  padding: 1px;
+.material-icons-round {
+  padding: 2px;
   margin: 2px;
   transform: scale(1.05);
-  border-radius: 3px;
+  border-radius: 5px;
 }
-.list-right .material-icons-round:hover {
-  background-color: var(--bgColorPopUp);
+.material-icons-round:hover {
+  background-color: darkgray;
 }
 .date {
   font-size: 0.875rem;
   padding: 3px 6px;
   border: solid 1.5px var(--textColor);
   border-radius: 10px;
-  text-align: center;
   width: 95px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .list-details span {
   display: inline-block;

@@ -61,6 +61,7 @@
                 id="projectInput"
                 placeholder="Enter Project Name"
                 maxlength="24" />
+              <div class="projectValidation validation hidden">Duplicate project not allowed.</div>
               <div class="formButtons">
                 <input type="submit" class="projectSubmitBtn" value="Add" />
                 <input type="button" class="projectCancelBtn" value="Cancel" />
@@ -70,11 +71,6 @@
           <button id="addProject">
             <span class="material-icons-round">add_circle_outlined</span>Add Project
           </button>
-          <!-- hidden pop up option -->
-          <div class="option hidden" id="projectOption">
-            <button>Rename</button>
-            <button>Delete</button>
-          </div>
         </div>
       </div>
       <div id="rightPanel" class="rightPanel">

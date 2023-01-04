@@ -40,17 +40,21 @@ const tileChange = () => {
       e.target.closest('.tile').classList.add('selected');
 
       //add task visibility logic
-      const addListHide = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
-      if (addListHide) {
+      isHomeTile = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
+      if (isHomeTile) {
         addList.classList.add('hidden');
-        title.innerHTML = e.target.closest('.tile').textContent;
+        currentTile = e.target.closest('.tile').querySelector('div').textContent;
+        title.innerHTML = currentTile;
       } else {
         addList.classList.remove('hidden');
-        title.innerHTML = e.target.closest('.tile').querySelector('input').value;
+        currentTile = e.target.closest('.tile').querySelector('input').value;
+        title.innerHTML = currentTile;
       }
+      console.log(currentTile);
 
       //hide the task form when going to another project
       hideListForm();
+      refreshDisplayTasks();
     })
   );
 };
@@ -72,9 +76,11 @@ const eventListeners = () => {
 const hideProjectForm = () => {
   const projectForm = document.querySelector('#projectForm');
   const projectInput = document.querySelector('#projectInput');
+  const projectValidation = document.querySelector('.projectValidation');
   //reset value
   projectInput.value = '';
   projectForm.classList.add('hidden');
+  projectValidation.classList.add('hidden');
 };
 
 //Cancel button - hide add-task-form
@@ -107,8 +113,16 @@ window.addEventListener('load', () => {
   newProjectForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Add the new project into the project list then save to local storage
     const projectName = document.getElementById('projectInput').value;
+    const projectValidation = document.querySelector('.projectValidation');
+
+    // Validation if duplicate project names exist.
+    if (projectList.filter((t) => t.projectName === projectName).length > 0) {
+      projectValidation.classList.remove('hidden');
+      return;
+    }
+
+    // Add the new project into the project list then save to local storage
     const newProject = new CreateProject(projectName);
     projectList.push(newProject);
     saveToLocalStorage();
@@ -172,8 +186,11 @@ const refreshDisplayProjects = () => {
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
       projectList = projectList.filter((t) => t.projectName !== proj.projectName);
+      taskList = taskList.filter((t) => t.projectName !== proj.projectName);
       saveToLocalStorage();
-      refreshDisplayProjects();
+      location.reload();
+      // refreshDisplayProjects();
+      // refreshDisplayTasks();
     });
 
     //edit icon logic
@@ -181,13 +198,28 @@ const refreshDisplayProjects = () => {
       const projectInput = container.querySelector('.projectName');
       projectInput.removeAttribute('readonly');
       projectInput.focus();
-      projectInput.addEventListener('blur', (e) => {
-        projectInput.setAttribute('readonly', true);
-        proj.projectName = e.target.value;
-        saveToLocalStorage();
-        refreshDisplayProjects();
-      });
+      projectInput.addEventListener('keypress', updateProject, false);
+      projectInput.addEventListener('blur', updateProject, false);
     });
+
+    const updateProject = (e) => {
+      if (e.type === 'blur' || e.key === 'Enter') {
+        if (
+          JSON.parse(localStorage.getItem('projectList')).filter(
+            (t) => t.projectName === e.target.value
+          ).length > 0
+        ) {
+          return;
+        } else {
+          projectInput.setAttribute('readonly', true);
+          // document.activeElement.blur();
+
+          proj.projectName = e.target.value;
+          saveToLocalStorage();
+          refreshDisplayProjects();
+        }
+      }
+    };
 
     //tile change logic
     tileChange();
@@ -237,6 +269,7 @@ window.addEventListener('load', () => {
 
     refreshDisplayTasks();
   });
+  currentTile = 'All Tasks';
   refreshDisplayTasks();
 });
 
@@ -266,15 +299,59 @@ function CreateTask(taskName, projectName, details, dueDate = 'No Due Date') {
   this.important = false;
 }
 
+function addDaysToDate(date, daysToAdd) {
+  let newDate = new Date(date);
+  newDate.setDate(date.getDate() + daysToAdd);
+
+  return newDate;
+}
+
+function getFormattedDate(date) {
+  let day = date.getDate();
+  day < 10 ? (day = '0' + day) : day;
+  let month = date.getMonth() + 1;
+  month < 10 ? (month = '0' + month) : month;
+  let year = date.getFullYear();
+
+  return `${year}-${month}-${day}`;
+}
+
+// if (check <= to && check >= from) console.log('date contained');
 const refreshDisplayTasks = () => {
-  // prevent from rearrangement of add and form itself
+  // Set a temporary list for the changing of views in the sidebar
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
+  taskListTemp = taskList;
+  // prevent from rearrangement of add and form itself
   document
     .querySelector('.list-todo')
     .insertBefore(document.querySelector('#taskForm'), document.querySelector('#addList'));
+
+  let todaysDate = new Date();
+
+  if (currentTile === 'Important') {
+    taskListTemp = taskList.filter((t) => t.important);
+  } else if (currentTile === 'All Tasks') {
+    taskListTemp;
+  } else if (currentTile === 'Today') {
+    taskListTemp = taskList.filter((t) => getFormattedDate(todaysDate) === t.dueDate);
+  } else if (currentTile === 'Next 7 Days') {
+    const dateFrom = getFormattedDate(addDaysToDate(todaysDate, 1));
+    const dateTo = getFormattedDate(addDaysToDate(todaysDate, 7));
+
+    const from = Date.parse(dateFrom);
+    const to = Date.parse(dateTo);
+
+    taskListTemp = taskList.filter(
+      (t) => Date.parse(t.dueDate) <= to && Date.parse(t.dueDate) >= from
+    );
+  } else {
+    taskListTemp = taskList.filter((t) => t.projectName === currentTile);
+  }
+
+  // clearing of contents of the container to reinsert task list
   const todoList = document.querySelector('#taskCompleteList > ul');
   todoList.innerHTML = '';
-  taskList.forEach((task) => {
+  taskListTemp.forEach((task) => {
     //adding elements
     const li = document.createElement('li');
     const unchecked = document.createElement('div');

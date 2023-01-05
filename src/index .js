@@ -197,7 +197,6 @@ const refreshDisplayProjects = () => {
     container.appendChild(deleteIcon);
     mainContainer.appendChild(container);
     projectCompleteList.appendChild(mainContainer);
-    deleteIcon.classList.add('delIcon');
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
@@ -207,8 +206,8 @@ const refreshDisplayProjects = () => {
 
       saveToLocalStorage();
       refreshDisplayProjects();
-      // const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
-      // if (listFirstChild !== null) listFirstChild.click();
+      const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
+      if (listFirstChild !== null) listFirstChild.click();
     });
 
     //edit icon logic
@@ -412,7 +411,7 @@ const refreshDisplayTasks = () => {
     const listDetails = document.createElement('div');
     const taskTitle = document.createElement('div');
     const taskDetails = document.createElement('div');
-    const projDiv = document.createElement('div');
+    // const projDiv = document.createElement('div');
     const dateDiv = document.createElement('div');
     const listRight = document.createElement('div');
     const listRightIcons = document.createElement('div');
@@ -428,7 +427,7 @@ const refreshDisplayTasks = () => {
     taskTitle.classList.add('taskTitle');
     taskDetails.classList.add('taskDetails');
     dateDiv.classList.add('date');
-    projDiv.classList.add('date');
+    // projDiv.classList.add('date');
     listRight.classList.add('list-right');
     listRightIcons.classList.add('list-right-icons');
     starContainer.classList.add('starContainer');
@@ -443,10 +442,13 @@ const refreshDisplayTasks = () => {
     deleteIcon.classList.add('delIcon');
 
     //assigning values
-    taskTitle.textContent = task.taskName;
+    isHomeTile
+      ? (taskTitle.textContent = task.projectName + ' > ' + task.taskName)
+      : (taskTitle.textContent = task.taskName);
+
     taskDetails.textContent = task.details;
     dateDiv.textContent = task.dueDate;
-    projDiv.textContent = task.projectName;
+    // projDiv.textContent = task.projectName;
 
     //appending to DOM
     const ul = document.querySelector('ul');
@@ -456,9 +458,9 @@ const refreshDisplayTasks = () => {
     listDetails.appendChild(taskTitle);
     listDetails.appendChild(taskDetails);
     li.appendChild(listRight);
-    if (isHomeTile) {
-      listRight.appendChild(projDiv);
-    }
+    // if (isHomeTile) {
+    //   listRight.appendChild(projDiv);
+    // }
     listRight.appendChild(dateDiv);
     listRight.appendChild(listRightIcons);
     listRightIcons.appendChild(starContainer);

@@ -55,6 +55,11 @@ const tileChange = () => {
         currentTile = e.target.closest('.tile').querySelector('input').value;
         title.innerHTML = currentTile;
       }
+
+      // delete validation message if exist
+      if (document.querySelector('.editProjectValidation') !== null)
+        document.querySelector('.editProjectValidation').remove();
+
       //hide the task form when going to another project
       hideListForm();
       refreshDisplayTasks();
@@ -169,6 +174,7 @@ const refreshDisplayProjects = () => {
     const projectCompleteList = document.querySelector('#projectCompleteList');
 
     //adding elements
+    const mainContainer = document.createElement('div');
     const container = document.createElement('div');
     const menuIcon = createSpanIcon('menu');
     const projectName = document.createElement('input');
@@ -189,7 +195,9 @@ const refreshDisplayProjects = () => {
     container.appendChild(projectName);
     container.appendChild(editIcon);
     container.appendChild(deleteIcon);
-    projectCompleteList.appendChild(container);
+    mainContainer.appendChild(container);
+    projectCompleteList.appendChild(mainContainer);
+    deleteIcon.classList.add('delIcon');
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
@@ -226,6 +234,15 @@ const refreshDisplayProjects = () => {
             (t) => t.projectName === e.target.value
           ).length > 0
         ) {
+          // input validation as element
+          const validationEdit = document.createElement('div');
+          validationEdit.classList.add('editProjectValidation');
+          validationEdit.classList.add('validation');
+          validationEdit.textContent = 'Duplicate project name not allowed. Reverting back.';
+          mainContainer.appendChild(validationEdit);
+          projectNameEdit.setAttribute('readonly', true);
+          projectNameEdit.classList.toggle('projectNameEdit');
+          projectNameEdit.value = originalProjName;
           return;
         }
         projectNameEdit.setAttribute('readonly', true);
@@ -250,6 +267,7 @@ const refreshDisplayProjects = () => {
 
         saveToLocalStorage();
         refreshDisplayProjects();
+
         document.querySelector('.lastSelected').click();
       }
     };
@@ -269,7 +287,9 @@ window.addEventListener('load', () => {
     e.preventDefault();
 
     const taskName = document.getElementById('listInput').value;
-    const projectName = document.querySelector('.selected input').value;
+    let projectName = document.querySelector('.selected input');
+    projectName === null ? (projectName = editProjNameCurrrent) : (projectName = projectName.value);
+
     const taskValidation = document.querySelector('.taskValidation');
 
     // Validation if duplicate task names exist. Compare current local storage task names to listInput element value
@@ -411,7 +431,7 @@ const refreshDisplayTasks = () => {
     projDiv.classList.add('date');
     listRight.classList.add('list-right');
     listRightIcons.classList.add('list-right-icons');
-    starContainer.classList.add('.starContainer');
+    starContainer.classList.add('starContainer');
     starOutline.classList.add('star-outline');
     star.classList.add('important');
     task.important ? starOutline.classList.add('listHidden') : star.classList.add('listHidden');
@@ -420,6 +440,7 @@ const refreshDisplayTasks = () => {
       listDetails.classList.toggle('lineThrough');
       listDetails.classList.toggle('fade');
     }
+    deleteIcon.classList.add('delIcon');
 
     //assigning values
     taskTitle.textContent = task.taskName;
@@ -508,6 +529,7 @@ const refreshDisplayTasks = () => {
         });
       }
       editTitleCurrrent = task.taskName;
+      editProjNameCurrrent = task.projectName;
     });
   });
   editMode = false;

@@ -209,11 +209,13 @@ form:hover {
   padding: 5px;
   padding-left: 10px;
   width: 150px;
+  border-radius: 8px;
+  outline: 0;
 }
 
-.projectName:focus {
-  outline: 0;
+.projectNameEdit {
   cursor: initial;
+  background-color: var(--bgColor1);
 }
 
 .selected {
@@ -224,40 +226,6 @@ form:hover {
 }
 .selected:hover {
   background-color: #1f8d4d7a !important;
-}
-
-/* css for editProject part */
-.editContainer {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  position: relative;
-}
-.editContainer.active .option {
-  opacity: 1 !important;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-.option {
-  pointer-events: none;
-  display: flex;
-  opacity: 0;
-  flex-direction: column;
-  background: var(--textColor);
-  bottom: 30px;
-  right: 10px;
-  z-index: 2;
-  border-radius: 3px;
-  background-color: var(--bgColorPopUp);
-  padding: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-  transform: translateY(+10px);
-  transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
-  position: absolute;
-}
-.option > button {
-  color: var(--textColor);
-  margin: 0;
 }
 
 .project #projectForm,
@@ -464,6 +432,11 @@ li {
 }
 
 .list-right {
+  gap: 8px;
+}
+
+.list-right-icons,
+.list-right {
   display: flex;
 }
 
@@ -474,14 +447,14 @@ li {
   border-radius: 5px;
 }
 .material-icons-round:hover {
-  background-color: darkgray;
+  background-color: var(--accent);
 }
 .date {
   font-size: 0.875rem;
   padding: 3px 6px;
   border: solid 1.5px var(--textColor);
   border-radius: 10px;
-  width: 95px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;

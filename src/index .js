@@ -1,7 +1,11 @@
 //Adding of project
 const addProject = document.querySelector('#addProject');
 const projectForm = document.querySelector('#projectForm');
-addProject.addEventListener('click', () => projectForm.classList.remove('hidden'));
+const projectInput = document.querySelector('#projectInput');
+addProject.addEventListener('click', () => {
+  projectForm.classList.remove('hidden');
+  projectInput.focus();
+});
 
 //Adding of task
 const addList = document.querySelector('#addList');
@@ -33,6 +37,7 @@ const tileChange = () => {
 
   tile.forEach((item) =>
     item.addEventListener('click', (e) => {
+      // remove current selection
       for (i of tile) {
         i.classList.remove('selected');
       }
@@ -50,8 +55,6 @@ const tileChange = () => {
         currentTile = e.target.closest('.tile').querySelector('input').value;
         title.innerHTML = currentTile;
       }
-      console.log(currentTile);
-
       //hide the task form when going to another project
       hideListForm();
       refreshDisplayTasks();
@@ -133,13 +136,16 @@ window.addEventListener('load', () => {
     // Hide the new project pop up then refresh/reload the project list
     hideProjectForm();
     refreshDisplayProjects();
+    document.querySelector('#projectCompleteList').lastChild.click();
   });
+  isHomeTile = true;
   refreshDisplayProjects();
 });
 
 //Create project constructor
 function CreateProject(projectName) {
   this.projectName = projectName;
+  this.lastSelected = true;
 }
 
 //Save projectList on local storage
@@ -168,11 +174,13 @@ const refreshDisplayProjects = () => {
     const projectName = document.createElement('input');
     projectName.setAttribute('readonly', '');
     projectName.setAttribute('spellcheck', false);
+    projectName.setAttribute('maxlength', 12);
     const editIcon = createSpanIcon('edit');
     const deleteIcon = createSpanIcon('delete');
 
     //adding classlist of elements above
     container.classList.add('tile');
+    if (proj.lastSelected) container.classList.add('lastSelected');
     projectName.classList.add('projectName');
     projectName.value = proj.projectName;
 
@@ -185,39 +193,64 @@ const refreshDisplayProjects = () => {
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
+      document.querySelector('#allTasks').classList.add('selected');
       projectList = projectList.filter((t) => t.projectName !== proj.projectName);
       taskList = taskList.filter((t) => t.projectName !== proj.projectName);
+
       saveToLocalStorage();
-      location.reload();
-      // refreshDisplayProjects();
-      // refreshDisplayTasks();
+      refreshDisplayProjects();
+      // const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
+      // if (listFirstChild !== null) listFirstChild.click();
     });
 
     //edit icon logic
-    editIcon.addEventListener('click', (e) => {
-      const projectInput = container.querySelector('.projectName');
-      projectInput.removeAttribute('readonly');
-      projectInput.focus();
-      projectInput.addEventListener('keypress', updateProject, false);
-      projectInput.addEventListener('blur', updateProject, false);
+    editIcon.addEventListener('click', () => {
+      projectNameEdit = container.querySelector('.projectName');
+      projectNameEdit.classList.toggle('projectNameEdit');
+      originalProjName = projectNameEdit.value;
+      projectNameEdit.removeAttribute('readonly');
+      projectNameEdit.focus();
+      projectNameEdit.addEventListener('keypress', updateProject, false);
+      projectNameEdit.addEventListener('blur', updateProject, false);
     });
 
     const updateProject = (e) => {
+      // If event is blur or enter key, then check if the original project name matches the event target value, if yes then proceed.
+      // This is to exclude the unchanged content in edit form from the validation of project name duplicate.
       if (e.type === 'blur' || e.key === 'Enter') {
-        if (
+        if (originalProjName === e.target.value) {
+          projectNameEdit.classList.toggle('projectNameEdit');
+        } else if (
+          // validation of duplicate project name
           JSON.parse(localStorage.getItem('projectList')).filter(
             (t) => t.projectName === e.target.value
           ).length > 0
         ) {
           return;
-        } else {
-          projectInput.setAttribute('readonly', true);
-          // document.activeElement.blur();
-
-          proj.projectName = e.target.value;
-          saveToLocalStorage();
-          refreshDisplayProjects();
         }
+        projectNameEdit.setAttribute('readonly', true);
+
+        // blur upon pressing enter
+        document.activeElement.blur();
+
+        // edit the projectname on each task that is affected on the edit event
+        taskListEdit = taskList;
+        taskListEdit.forEach((item) => {
+          if (item.projectName === originalProjName) item.projectName = e.target.value;
+        });
+
+        // set all elements into last selected false to avoid multiple last selected class
+        projectList.forEach((item) => {
+          item.lastSelected = false;
+        });
+
+        // set values
+        proj.projectName = e.target.value;
+        proj.lastSelected = true;
+
+        saveToLocalStorage();
+        refreshDisplayProjects();
+        document.querySelector('.lastSelected').click();
       }
     };
 
@@ -236,12 +269,15 @@ window.addEventListener('load', () => {
     e.preventDefault();
 
     const taskName = document.getElementById('listInput').value;
+    const projectName = document.querySelector('.selected input').value;
     const taskValidation = document.querySelector('.taskValidation');
 
     // Validation if duplicate task names exist. Compare current local storage task names to listInput element value
     if (taskName === editTitleCurrrent) {
     } else if (
-      JSON.parse(localStorage.getItem('taskList')).filter((t) => t.taskName === taskName).length > 0
+      JSON.parse(localStorage.getItem('taskList')).filter(
+        (t) => t.taskName + t.projectName === taskName + projectName
+      ).length > 0
     ) {
       taskValidation.classList.remove('hidden');
       return;
@@ -254,7 +290,6 @@ window.addEventListener('load', () => {
       details === '' ? (details = 'No details') : details;
       let dueDate = document.getElementById('listInputDate').value;
       dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
-      const projectName = document.querySelector('.selected input').value;
       const newtask = new CreateTask(taskName, projectName, details, dueDate);
       taskList.push(newtask);
     }
@@ -316,7 +351,6 @@ function getFormattedDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-// if (check <= to && check >= from) console.log('date contained');
 const refreshDisplayTasks = () => {
   // Set a temporary list for the changing of views in the sidebar
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
@@ -358,8 +392,10 @@ const refreshDisplayTasks = () => {
     const listDetails = document.createElement('div');
     const taskTitle = document.createElement('div');
     const taskDetails = document.createElement('div');
+    const projDiv = document.createElement('div');
     const dateDiv = document.createElement('div');
     const listRight = document.createElement('div');
+    const listRightIcons = document.createElement('div');
     const starContainer = document.createElement('div');
     const starOutline = createSpanIcon('star_outline');
     const star = createSpanIcon('star');
@@ -372,7 +408,9 @@ const refreshDisplayTasks = () => {
     taskTitle.classList.add('taskTitle');
     taskDetails.classList.add('taskDetails');
     dateDiv.classList.add('date');
+    projDiv.classList.add('date');
     listRight.classList.add('list-right');
+    listRightIcons.classList.add('list-right-icons');
     starContainer.classList.add('.starContainer');
     starOutline.classList.add('star-outline');
     star.classList.add('important');
@@ -387,6 +425,7 @@ const refreshDisplayTasks = () => {
     taskTitle.textContent = task.taskName;
     taskDetails.textContent = task.details;
     dateDiv.textContent = task.dueDate;
+    projDiv.textContent = task.projectName;
 
     //appending to DOM
     const ul = document.querySelector('ul');
@@ -396,16 +435,22 @@ const refreshDisplayTasks = () => {
     listDetails.appendChild(taskTitle);
     listDetails.appendChild(taskDetails);
     li.appendChild(listRight);
+    if (isHomeTile) {
+      listRight.appendChild(projDiv);
+    }
     listRight.appendChild(dateDiv);
-    listRight.appendChild(starContainer);
+    listRight.appendChild(listRightIcons);
+    listRightIcons.appendChild(starContainer);
     starContainer.appendChild(starOutline);
     starContainer.appendChild(star);
-    listRight.appendChild(editIcon);
-    listRight.appendChild(deleteIcon);
+    listRightIcons.appendChild(editIcon);
+    listRightIcons.appendChild(deleteIcon);
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
-      taskList = taskList.filter((t) => t.taskName !== task.taskName);
+      taskList = taskList.filter(
+        (t) => t.taskName + t.projectName !== task.taskName + task.projectName
+      );
       saveToLocalStorage();
       refreshDisplayTasks();
     });

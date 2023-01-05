@@ -446,8 +446,13 @@ li {
   transform: scale(1.05);
   border-radius: 5px;
 }
-.material-icons-round:hover {
-  background-color: var(--accent);
+.starContainer {
+  border-radius: 5px;
+}
+
+.material-icons-round:hover,
+.starContainer:hover {
+  background-color: rgb(187, 187, 187);
 }
 .date {
   font-size: 0.875rem;
@@ -582,4 +587,8 @@ footer img:hover {
 
 .containerEdit {
   width: 100%;
+}
+
+.delIcon {
+  color: rgb(240, 80, 80);
 }

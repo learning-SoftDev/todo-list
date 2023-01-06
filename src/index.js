@@ -372,6 +372,13 @@ const refreshDisplayTasks = () => {
   // Set a temporary list for the changing of views in the sidebar
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
   taskListTemp = taskList;
+
+  if (taskList.length === 0 && isHomeTile) {
+    document.querySelector('.noTask').classList.remove('hidden');
+  } else {
+    document.querySelector('.noTask').classList.add('hidden');
+  }
+
   // prevent from rearrangement of add and form itself
   document
     .querySelector('.list-todo')

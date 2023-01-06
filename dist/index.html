@@ -43,7 +43,7 @@
             <div data-name>Today</div>
           </div>
           <div class="tile homeTiles" id="thisWeek">
-            <img src="images/week2.png" />
+            <img src="images/week2.png" alt="week" />
             <div data-name>Next 7 Days</div>
           </div>
           <div class="tile homeTiles" id="important">
@@ -79,6 +79,20 @@
       <div id="rightPanel" class="rightPanel">
         <div class="title">All Tasks</div>
         <div class="list-todo">
+          <div class="noTask hidden">
+            No tasks created yet. To start, add a project then add tasks for that project. You may
+            add multiple projects and multiple tasks on each of them.
+            <br /><br />
+            Navigation: <br />
+            <img src="images/inbox.png" alt="inbox" class="no-task-icon" />All Tasks - displays all
+            tasks from all of the projects<br />
+            <img src="images/today1.png" alt="today" class="no-task-icon" /> Today - displays all
+            tasks that are due today<br />
+            <img src="images/week2.png" alt="week" class="no-task-icon" /> Next 7 Days - displays
+            all tasks that are due seven days from now<br />
+            <img src="images/star.png" alt="star" class="no-task-icon" /> Important - displays all
+            tasks marked as important<br />
+          </div>
           <div id="taskCompleteList"><ul></ul></div>
           <!-- hidden pop up adding task form -->
           <form id="taskForm" class="hidden" autocomplete="off">

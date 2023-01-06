@@ -37,6 +37,7 @@ const tileChange = () => {
 
   tile.forEach((item) =>
     item.addEventListener('click', (e) => {
+      if (JSON.stringify(e.target.classList).includes('projDelIcon')) return;
       // remove current selection
       for (i of tile) {
         i.classList.remove('selected');
@@ -46,6 +47,7 @@ const tileChange = () => {
 
       //add task visibility logic
       isHomeTile = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
+
       if (isHomeTile) {
         addList.classList.add('hidden');
         currentTile = e.target.closest('.tile').querySelector('div').textContent;
@@ -75,9 +77,6 @@ const eventListeners = () => {
 
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
-
-  // const editCancelBtn = document.querySelector('#editCancelButton');
-  // editCancelBtn.addEventListener('click', hideEditForm);
 };
 
 //Cancel button - hide project form
@@ -141,7 +140,7 @@ window.addEventListener('load', () => {
     // Hide the new project pop up then refresh/reload the project list
     hideProjectForm();
     refreshDisplayProjects();
-    document.querySelector('#projectCompleteList').lastChild.click();
+    document.querySelector('#projectCompleteList').lastChild.querySelector('.tile').click();
   });
   isHomeTile = true;
   refreshDisplayProjects();
@@ -188,6 +187,7 @@ const refreshDisplayProjects = () => {
     container.classList.add('tile');
     if (proj.lastSelected) container.classList.add('lastSelected');
     projectName.classList.add('projectName');
+    deleteIcon.classList.add('projDelIcon');
     projectName.value = proj.projectName;
 
     //appending to DOM
@@ -200,14 +200,13 @@ const refreshDisplayProjects = () => {
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
-      document.querySelector('#allTasks').classList.add('selected');
       projectList = projectList.filter((t) => t.projectName !== proj.projectName);
       taskList = taskList.filter((t) => t.projectName !== proj.projectName);
-
       saveToLocalStorage();
       refreshDisplayProjects();
-      const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
-      if (listFirstChild !== null) listFirstChild.click();
+      // const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
+      // if (listFirstChild !== null) listFirstChild.querySelector('.tile').click();
+      document.getElementById('allTasks').click();
     });
 
     //edit icon logic

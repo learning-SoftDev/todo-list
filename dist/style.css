@@ -176,6 +176,10 @@ body.light {
   margin-top: 15px;
 }
 
+.tile {
+  z-index: 3;
+}
+
 button,
 li,
 form,
@@ -546,7 +550,6 @@ footer img:hover {
     flex-direction: column;
   }
   .leftPanel {
-    z-index: 3;
     overflow: auto;
     width: auto;
   }
@@ -554,9 +557,13 @@ footer img:hover {
     flex-direction: column;
     gap: 0;
     align-items: center;
+    padding: 5px;
   }
   .rightPanel {
     padding: 14px;
+  }
+  li {
+    padding: 0;
   }
 }
 

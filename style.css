@@ -482,6 +482,14 @@ li {
   box-sizing: border-box;
   align-content: space-around;
 }
+.validation {
+  color: red;
+  text-align: center;
+}
+
+.containerEdit {
+  width: 100%;
+}
 
 .list-todo form {
   padding: 10px 20px;
@@ -501,10 +509,15 @@ li:active {
 }
 
 .noTask {
-  text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  padding: 10px;
+  color: var(--textColor);
 }
 
+.no-task-icon {
+  width: 1em;
+  margin-right: 6px;
+}
 /* css for footer */
 footer {
   display: flex;
@@ -585,13 +598,4 @@ footer img:hover {
     width: 20px;
     height: 20px;
   }
-}
-
-.validation {
-  color: red;
-  text-align: center;
-}
-
-.containerEdit {
-  width: 100%;
 }

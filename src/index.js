@@ -270,10 +270,9 @@ const refreshDisplayProjects = () => {
         document.querySelector('.lastSelected').click();
       }
     };
-
-    //tile change logic
-    tileChange();
   });
+  //tile change logic
+  tileChange();
 };
 
 // Creating tasks

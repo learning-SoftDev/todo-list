@@ -189,6 +189,8 @@ const refreshDisplayProjects = () => {
     projectName.classList.add('projectName');
     deleteIcon.classList.add('projDelIcon');
     projectName.value = proj.projectName;
+    editIcon.setAttribute('title', 'Edit');
+    deleteIcon.setAttribute('title', 'Delete');
 
     //appending to DOM
     container.appendChild(menuIcon);
@@ -438,6 +440,7 @@ const refreshDisplayTasks = () => {
     starContainer.classList.add('starContainer');
     starOutline.classList.add('star-outline');
     star.classList.add('important');
+    starOutline.setAttribute('title', 'Mark as Important');
     task.important ? starOutline.classList.add('listHidden') : star.classList.add('listHidden');
     if (task.completed) {
       unchecked.classList.toggle('checked');
@@ -453,6 +456,8 @@ const refreshDisplayTasks = () => {
 
     taskDetails.textContent = task.details;
     dateDiv.textContent = task.dueDate;
+    editIcon.setAttribute('title', 'Edit');
+    deleteIcon.setAttribute('title', 'Delete');
     // projDiv.textContent = task.projectName;
 
     //appending to DOM

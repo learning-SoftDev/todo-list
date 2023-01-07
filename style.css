@@ -529,25 +529,31 @@ footer {
   flex-shrink: 0;
   height: 35px;
 }
-footer > * {
-  margin: auto 10px;
-  vertical-align: center;
-  /* height: 35px; */
+
+footer > p > a {
+  color: var(--textColor);
+  position: relative;
+  text-decoration: none;
+  font-weight: bold;
 }
-footer a {
-  color: var(--accent);
-}
-footer img {
-  width: 23px;
-  height: 23px;
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 50%;
-  border: solid 1px var(--textColor);
-}
-footer img:hover {
+
+footer > p > a::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
   background-color: var(--accent);
-  cursor: pointer;
+  bottom: 0;
+  left: 0;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+footer > p > a:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
 }
 
 .disabled {
@@ -593,8 +599,7 @@ footer img:hover {
   .content .material-icons-round {
     transform: scale(0.85);
   }
-  .leftPanel img,
-  footer img {
+  .leftPanel img {
     width: 20px;
     height: 20px;
   }

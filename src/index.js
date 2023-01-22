@@ -1,3 +1,5 @@
+import { DOMManipulator } from './testMod.js';
+
 //Adding of project
 const addProject = document.querySelector('#addProject');
 const projectForm = document.querySelector('#projectForm');
@@ -30,6 +32,8 @@ hiddenMenu.addEventListener('click', () => {
 });
 
 //Sidebar click logic
+let isHomeTile = '';
+let currentTile = '';
 const tileChange = () => {
   const tile = document.querySelectorAll('.tile');
   const addList = document.querySelector('#addList');
@@ -38,10 +42,12 @@ const tileChange = () => {
   tile.forEach((item) =>
     item.addEventListener('click', (e) => {
       if (JSON.stringify(e.target.classList).includes('projDelIcon')) return;
+
       // remove current selection
-      for (i of tile) {
-        i.classList.remove('selected');
-      }
+      tile.forEach((item) => {
+        item.classList.remove('selected');
+      });
+
       //add selected class
       e.target.closest('.tile').classList.add('selected');
 
@@ -73,21 +79,10 @@ const tileChange = () => {
 const eventListeners = () => {
   //Cancel button
   const projectCancelBtn = document.querySelector('.projectCancelBtn');
-  projectCancelBtn.addEventListener('click', hideProjectForm);
+  projectCancelBtn.addEventListener('click', DOMManipulator.hideProjectForm);
 
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
-};
-
-//Cancel button - hide project form
-const hideProjectForm = () => {
-  const projectForm = document.querySelector('#projectForm');
-  const projectInput = document.querySelector('#projectInput');
-  const projectValidation = document.querySelector('.projectValidation');
-  //reset value
-  projectInput.value = '';
-  projectForm.classList.add('hidden');
-  projectValidation.classList.add('hidden');
 };
 
 //Cancel button - hide add-task-form
@@ -113,6 +108,7 @@ const hideListForm = () => {
 eventListeners();
 
 //On load, get items from local storage then add the submit event handler to the form. Note to put refreshDisplayProjects in every change to reflect changes in DOM
+let projectList = '';
 window.addEventListener('load', () => {
   projectList = JSON.parse(localStorage.getItem('projectList')) || [];
   const newProjectForm = document.querySelector('#projectForm');
@@ -138,7 +134,7 @@ window.addEventListener('load', () => {
     e.target.reset();
 
     // Hide the new project pop up then refresh/reload the project list
-    hideProjectForm();
+    DOMManipulator.hideProjectForm();
     refreshDisplayProjects();
     document.querySelector('#projectCompleteList').lastChild.querySelector('.tile').click();
   });
@@ -278,6 +274,9 @@ const refreshDisplayProjects = () => {
 
 // Creating tasks
 //On load, get items from local storage then add the submit event handler to the form. Note to put refreshDisplayProjects in every change to reflect changes in DOM
+let taskList = '';
+let editMode = false;
+let editTitleCurrrent = '';
 window.addEventListener('load', () => {
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
   const newtaskForm = document.querySelector('#taskForm');
@@ -373,6 +372,7 @@ function getFormattedDate(date) {
 const refreshDisplayTasks = () => {
   // Set a temporary list for the changing of views in the sidebar
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
+  let taskListTemp = '';
   taskListTemp = taskList;
 
   if (taskList.length === 0 && isHomeTile) {

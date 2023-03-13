@@ -1,4 +1,4 @@
-import { DOMManipulator } from './testMod.js';
+// import { DOMManipulator } from './testMod.js';
 
 //Adding of project
 const addProject = document.querySelector('#addProject');
@@ -30,6 +30,17 @@ hiddenMenu.addEventListener('click', () => {
   const leftPanel = document.querySelector('.leftPanel');
   leftPanel.classList.toggle('hidden');
 });
+
+//Cancel button - hide project form
+const hideProjectForm = () => {
+  const projectForm = document.querySelector('#projectForm');
+  const projectInput = document.querySelector('#projectInput');
+  const projectValidation = document.querySelector('.projectValidation');
+  //reset value
+  projectInput.value = '';
+  projectForm.classList.add('hidden');
+  projectValidation.classList.add('hidden');
+};
 
 //Sidebar click logic
 let isHomeTile = '';
@@ -79,7 +90,7 @@ const tileChange = () => {
 const eventListeners = () => {
   //Cancel button
   const projectCancelBtn = document.querySelector('.projectCancelBtn');
-  projectCancelBtn.addEventListener('click', DOMManipulator.hideProjectForm);
+  projectCancelBtn.addEventListener('click', hideProjectForm);
 
   const listCancelBtn = document.querySelector('.listCancelBtn');
   listCancelBtn.addEventListener('click', hideListForm);
@@ -134,7 +145,7 @@ window.addEventListener('load', () => {
     e.target.reset();
 
     // Hide the new project pop up then refresh/reload the project list
-    DOMManipulator.hideProjectForm();
+    hideProjectForm();
     refreshDisplayProjects();
     document.querySelector('#projectCompleteList').lastChild.querySelector('.tile').click();
   });

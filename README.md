@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ToDoList
 
 This is a productivity ToDoList app which uses browsers' local storage for storing of tasks
@@ -18,6 +17,3 @@ This is a productivity ToDoList app which uses browsers' local storage for stori
 - Create a registration page and a database to store the tasks so it will be available on every device.
   <br>
   Live: https://learning-softdev.github.io/todo-list/
-=======
-# todo-list
->>>>>>> parent of abfaf51 (Readme)

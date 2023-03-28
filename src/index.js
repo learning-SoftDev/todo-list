@@ -1,24 +1,5 @@
-// import { DOMManipulator } from './testMod.js';
-
-//Adding of project
-const addProject = document.querySelector('#addProject');
-const projectForm = document.querySelector('#projectForm');
-const projectInput = document.querySelector('#projectInput');
-addProject.addEventListener('click', () => {
-  projectForm.classList.remove('hidden');
-  projectInput.focus();
-});
-
-//Adding of task
-const addList = document.querySelector('#addList');
-const taskForm = document.querySelector('#taskForm');
-const submitBtn = document.querySelector('.listSubmitBtn');
-const editConfirm = document.querySelector('#editConfirm');
-addList.addEventListener('click', () => {
-  taskForm.classList.remove('hidden');
-  submitBtn.classList.remove('hidden');
-  editConfirm.classList.add('hidden');
-});
+import { projectFunc } from './Project.js';
+import { taskFunc } from './Task.js';
 
 //Dark and Light Mode
 const checkbox = document.querySelector('#checkbox');
@@ -30,17 +11,6 @@ hiddenMenu.addEventListener('click', () => {
   const leftPanel = document.querySelector('.leftPanel');
   leftPanel.classList.toggle('hidden');
 });
-
-//Cancel button - hide project form
-const hideProjectForm = () => {
-  const projectForm = document.querySelector('#projectForm');
-  const projectInput = document.querySelector('#projectInput');
-  const projectValidation = document.querySelector('.projectValidation');
-  //reset value
-  projectInput.value = '';
-  projectForm.classList.add('hidden');
-  projectValidation.classList.add('hidden');
-};
 
 //Sidebar click logic
 let isHomeTile = '';
@@ -80,43 +50,11 @@ const tileChange = () => {
         document.querySelector('.editProjectValidation').remove();
 
       //hide the task form when going to another project
-      hideListForm();
+      taskFunc.hideListForm();
       refreshDisplayTasks();
     })
   );
 };
-
-//Event listeners
-const eventListeners = () => {
-  //Cancel button
-  const projectCancelBtn = document.querySelector('.projectCancelBtn');
-  projectCancelBtn.addEventListener('click', hideProjectForm);
-
-  const listCancelBtn = document.querySelector('.listCancelBtn');
-  listCancelBtn.addEventListener('click', hideListForm);
-};
-
-//Cancel button - hide add-task-form
-const hideListForm = () => {
-  const taskForm = document.querySelector('#taskForm');
-  const listInput = document.querySelector('#listInput');
-  const listInputDetail = document.querySelector('#listInputDetail');
-  const dateInput = document.querySelector('#listInputDate');
-  const taskValidation = document.querySelector('.taskValidation');
-
-  //reset values
-
-  listInput.value = '';
-  listInputDetail.value = '';
-  dateInput.value = '';
-
-  taskForm.classList.add('hidden');
-  taskValidation.classList.add('hidden');
-  document.querySelector('.list-todo').appendChild(taskForm);
-  refreshDisplayTasks();
-};
-
-eventListeners();
 
 //On load, get items from local storage then add the submit event handler to the form. Note to put refreshDisplayProjects in every change to reflect changes in DOM
 let projectList = '';
@@ -137,7 +75,7 @@ window.addEventListener('load', () => {
     }
 
     // Add the new project into the project list then save to local storage
-    const newProject = new CreateProject(projectName);
+    const newProject = new projectFunc.CreateProject(projectName);
     projectList.push(newProject);
     saveToLocalStorage();
 
@@ -145,7 +83,7 @@ window.addEventListener('load', () => {
     e.target.reset();
 
     // Hide the new project pop up then refresh/reload the project list
-    hideProjectForm();
+    projectFunc.hideProjectForm();
     refreshDisplayProjects();
     document.querySelector('#projectCompleteList').lastChild.querySelector('.tile').click();
   });
@@ -153,13 +91,7 @@ window.addEventListener('load', () => {
   refreshDisplayProjects();
 });
 
-//Create project constructor
-function CreateProject(projectName) {
-  this.projectName = projectName;
-  this.lastSelected = true;
-}
-
-//Save projectList on local storage
+//Save projectList and taskList on local storage
 const saveToLocalStorage = () => {
   localStorage.setItem('projectList', JSON.stringify(projectList));
   localStorage.setItem('taskList', JSON.stringify(taskList));
@@ -173,6 +105,9 @@ const createSpanIcon = (name) => {
   return icon;
 };
 
+let projectNameEdit = '';
+let originalProjName = '';
+let taskListEdit = '';
 const refreshDisplayProjects = () => {
   const todoList = document.querySelector('#projectCompleteList');
   todoList.innerHTML = '';
@@ -213,8 +148,6 @@ const refreshDisplayProjects = () => {
       taskList = taskList.filter((t) => t.projectName !== proj.projectName);
       saveToLocalStorage();
       refreshDisplayProjects();
-      // const listFirstChild = document.querySelector('#projectCompleteList').firstChild;
-      // if (listFirstChild !== null) listFirstChild.querySelector('.tile').click();
       document.getElementById('allTasks').click();
     });
 
@@ -288,6 +221,7 @@ const refreshDisplayProjects = () => {
 let taskList = '';
 let editMode = false;
 let editTitleCurrrent = '';
+let editProjNameCurrrent = '';
 window.addEventListener('load', () => {
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
   const newtaskForm = document.querySelector('#taskForm');
@@ -319,29 +253,32 @@ window.addEventListener('load', () => {
       details === '' ? (details = 'No details') : details;
       let dueDate = document.getElementById('listInputDate').value;
       dueDate === '' ? (dueDate = 'No Due Date') : dueDate;
-      const newtask = new CreateTask(taskName, projectName, details, dueDate);
+      const newtask = new taskFunc.CreateTask(taskName, projectName, details, dueDate);
       taskList.push(newtask);
     }
     // Add the new task into the task list then save to local storage
     saveToLocalStorage();
 
     // Reset the form
+    //document.getElementById('listInput').value = '';
+
     e.target.reset();
 
     // // Hide the new task pop up then refresh/reload the task list
-    hideListForm();
-
+    taskFunc.hideListForm();
     refreshDisplayTasks();
+
+    let submitButton = document.querySelector('.listSubmitBtn');
+    submitButton.classList.add('disabled');
+    submitButton.disabled = true;
   });
   currentTile = 'All Tasks';
   refreshDisplayTasks();
 });
 
-const editButton = () => {};
-
-//Validation of add button if task name field is empty
-const validationSubmit = (taskName, submitButton) => {
-  taskName.addEventListener('input', (e) => {
+//Validation of add button if task/proj name field is empty
+const validationSubmit = (taskProjName, submitButton) => {
+  taskProjName.addEventListener('input', (e) => {
     if (e.target.value !== '') {
       submitButton.disabled = false;
       submitButton.classList.remove('disabled');
@@ -352,35 +289,29 @@ const validationSubmit = (taskName, submitButton) => {
   });
 };
 validationSubmit(document.getElementById('listInput'), document.querySelector('.listSubmitBtn'));
-
-//Create task constructor
-function CreateTask(taskName, projectName, details, dueDate = 'No Due Date') {
-  this.taskName = taskName;
-  this.projectName = projectName;
-  this.details = details;
-  this.dueDate = dueDate;
-  this.completed = false;
-  this.important = false;
-}
-
-function addDaysToDate(date, daysToAdd) {
-  let newDate = new Date(date);
-  newDate.setDate(date.getDate() + daysToAdd);
-
-  return newDate;
-}
-
-function getFormattedDate(date) {
-  let day = date.getDate();
-  day < 10 ? (day = '0' + day) : day;
-  let month = date.getMonth() + 1;
-  month < 10 ? (month = '0' + month) : month;
-  let year = date.getFullYear();
-
-  return `${year}-${month}-${day}`;
-}
+validationSubmit(
+  document.getElementById('projectInput'),
+  document.querySelector('.projectSubmitBtn')
+);
 
 const refreshDisplayTasks = () => {
+  function addDaysToDate(date, daysToAdd) {
+    let newDate = new Date(date);
+    newDate.setDate(date.getDate() + daysToAdd);
+
+    return newDate;
+  }
+
+  function getFormattedDate(date) {
+    let day = date.getDate();
+    day < 10 ? (day = '0' + day) : day;
+    let month = date.getMonth() + 1;
+    month < 10 ? (month = '0' + month) : month;
+    let year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  }
+
   // Set a temporary list for the changing of views in the sidebar
   taskList = JSON.parse(localStorage.getItem('taskList')) || [];
   let taskListTemp = '';
@@ -445,7 +376,6 @@ const refreshDisplayTasks = () => {
     taskTitle.classList.add('taskTitle');
     taskDetails.classList.add('taskDetails');
     dateDiv.classList.add('date');
-    // projDiv.classList.add('date');
     listRight.classList.add('list-right');
     listRightIcons.classList.add('list-right-icons');
     starContainer.classList.add('starContainer');
@@ -461,15 +391,14 @@ const refreshDisplayTasks = () => {
     deleteIcon.classList.add('delIcon');
 
     //assigning values
-    isHomeTile
-      ? (taskTitle.textContent = task.projectName + ' > ' + task.taskName)
+    taskTitle.textContent = isHomeTile
+      ? task.projectName + ' > ' + task.taskName
       : (taskTitle.textContent = task.taskName);
 
     taskDetails.textContent = task.details;
     dateDiv.textContent = task.dueDate;
     editIcon.setAttribute('title', 'Edit');
     deleteIcon.setAttribute('title', 'Delete');
-    // projDiv.textContent = task.projectName;
 
     //appending to DOM
     const ul = document.querySelector('ul');
@@ -479,9 +408,6 @@ const refreshDisplayTasks = () => {
     listDetails.appendChild(taskTitle);
     listDetails.appendChild(taskDetails);
     li.appendChild(listRight);
-    // if (isHomeTile) {
-    //   listRight.appendChild(projDiv);
-    // }
     listRight.appendChild(dateDiv);
     listRight.appendChild(listRightIcons);
     listRightIcons.appendChild(starContainer);
@@ -558,3 +484,5 @@ const refreshDisplayTasks = () => {
   editMode = false;
   editTitleCurrrent = '';
 };
+
+export { refreshDisplayTasks };

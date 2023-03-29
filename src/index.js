@@ -35,6 +35,11 @@ const tileChange = () => {
       //add task visibility logic
       isHomeTile = JSON.stringify(e.target.closest('.tile').classList).includes('homeTiles');
 
+      // Hide edit and delete icons when changing tiles
+      document.querySelectorAll('.delEditContainer').forEach((hideItem) => {
+        hideItem.classList.add('hidden');
+      });
+
       if (isHomeTile) {
         addList.classList.add('hidden');
         currentTile = e.target.closest('.tile').querySelector('div').textContent;
@@ -43,6 +48,9 @@ const tileChange = () => {
         addList.classList.remove('hidden');
         currentTile = e.target.closest('.tile').querySelector('input').value;
         title.innerHTML = currentTile;
+
+        //Unhide edit and delete icon when clicking
+        e.target.closest('.tile').querySelector('.delEditContainer').classList.remove('hidden');
       }
 
       // delete validation message if exist
@@ -124,23 +132,29 @@ const refreshDisplayProjects = () => {
     projectName.setAttribute('maxlength', 12);
     const editIcon = createSpanIcon('edit');
     const deleteIcon = createSpanIcon('delete');
+    const delEditContainer = document.createElement('div');
 
     //adding classlist of elements above
     container.classList.add('tile');
     if (proj.lastSelected) container.classList.add('lastSelected');
     projectName.classList.add('projectName');
     deleteIcon.classList.add('projDelIcon');
-    deleteIcon.classList.add('hidden');
-    editIcon.classList.add('hidden');
+    // deleteIcon.classList.add('hidden');
+    // editIcon.classList.add('hidden');
+    delEditContainer.classList.add('hidden');
+    delEditContainer.classList.add('delEditContainer');
     projectName.value = proj.projectName;
     editIcon.setAttribute('title', 'Edit');
     deleteIcon.setAttribute('title', 'Delete');
 
     //appending to DOM
+    delEditContainer.appendChild(editIcon);
+    delEditContainer.appendChild(deleteIcon);
     container.appendChild(menuIcon);
     container.appendChild(projectName);
-    container.appendChild(editIcon);
-    container.appendChild(deleteIcon);
+    // container.appendChild(editIcon);
+    // container.appendChild(deleteIcon);
+    container.appendChild(delEditContainer);
     // mainContainer.appendChild(container);
     projectCompleteList.appendChild(container);
 

@@ -115,7 +115,7 @@ const refreshDisplayProjects = () => {
     const projectCompleteList = document.querySelector('#projectCompleteList');
 
     //adding elements
-    const mainContainer = document.createElement('div');
+    // const mainContainer = document.createElement('div');
     const container = document.createElement('div');
     const menuIcon = createSpanIcon('menu');
     const projectName = document.createElement('input');
@@ -130,6 +130,8 @@ const refreshDisplayProjects = () => {
     if (proj.lastSelected) container.classList.add('lastSelected');
     projectName.classList.add('projectName');
     deleteIcon.classList.add('projDelIcon');
+    deleteIcon.classList.add('hidden');
+    editIcon.classList.add('hidden');
     projectName.value = proj.projectName;
     editIcon.setAttribute('title', 'Edit');
     deleteIcon.setAttribute('title', 'Delete');
@@ -139,8 +141,8 @@ const refreshDisplayProjects = () => {
     container.appendChild(projectName);
     container.appendChild(editIcon);
     container.appendChild(deleteIcon);
-    mainContainer.appendChild(container);
-    projectCompleteList.appendChild(mainContainer);
+    // mainContainer.appendChild(container);
+    projectCompleteList.appendChild(container);
 
     //delete icon logic
     deleteIcon.addEventListener('click', () => {
